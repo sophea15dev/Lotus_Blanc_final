@@ -1,16 +1,27 @@
-import React from 'react';
-import { Calendar } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, Menu, X } from 'lucide-react';
 import logo from '../assets/PSE_LOTUSBLANC-04.png'; 
 
 const Navbar: React.FC = () => {
-  // Common Styles to keep the code "Clean"
-  const navLinkStyle = {
-    color: '#2C3E50',
+  const [open, setOpen] = useState(false);
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [activeLink, setActiveLink] = useState('Home'); // default active
+
+  const links = [
+    { name: 'Home', href: '#home' },
+    { name: 'Menu', href: '#menu' },
+    { name: 'Contact', href: '#contact' },
+  ];
+
+  const navLinkStyle = (link: string) => ({
+    color: activeLink === link ? '#FF7043' : hoveredLink === link ? '#FF7043' : '#2C3E50',
     textDecoration: 'none',
     fontWeight: 'bold',
     fontSize: '18px',
-    margin: '0 20px'
-  };
+    margin: '0 20px',
+    transition: 'color 0.3s',
+    cursor: 'pointer',
+  });
 
   const buttonStyle = {
     backgroundColor: '#FF7043',
@@ -25,23 +36,22 @@ const Navbar: React.FC = () => {
     cursor: 'pointer',
     boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
     fontSize: '18px',
-    fontFamily: 'Work Sans' 
-
-
+    fontFamily: 'Work Sans',
   };
 
   return (
-    <nav style={{ 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'space-between', 
-      padding: '15px 100px', 
+    <nav style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '15px 100px',
       backgroundColor: 'white',
       borderBottom: '1px solid #eee',
-      fontFamily: 'Work Sans' 
+      fontFamily: 'Work Sans',
+      position: 'relative',
+      flexWrap: 'wrap'
     }}>
-      
-      {/* 1. LEFT: Logo & Text */}
+      {/* LEFT: Logo */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
         <img src={logo} alt="Lotus Logo" style={{ height: '50px', width: 'auto' }} />
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -54,19 +64,75 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. CENTER: Links with proper spacing */}
-      <div style={{ display: 'flex' }}>
-        <a href="#home" style={navLinkStyle}>Home</a>
-        <a href="#menu" style={navLinkStyle}>Menu</a>
-        <a href="#contact" style={navLinkStyle}>Contact</a>
+      {/* CENTER: Links */}
+      <div style={{
+        display: 'flex',
+        gap: '20px',
+        alignItems: 'center',
+      }}>
+        {links.map(link => (
+          <a
+            key={link.name}
+            href={link.href}
+            style={navLinkStyle(link.name)}
+            onMouseEnter={() => setHoveredLink(link.name)}
+            onMouseLeave={() => setHoveredLink(null)}
+            onClick={() => setActiveLink(link.name)}
+          >
+            {link.name}
+          </a>
+        ))}
       </div>
 
-      {/* 3. RIGHT: The Orange Pill Button */}
+      {/* RIGHT: Reservation Button */}
       <button style={buttonStyle}>
         <Calendar size={20} />
         <span>Reservation</span>
       </button>
 
+      {/* Hamburger Icon (mobile) */}
+      <div className="hamburger" onClick={() => setOpen(!open)} style={{
+        display: 'none',
+        cursor: 'pointer',
+        zIndex: 50
+      }}>
+        {open ? <X size={28} /> : <Menu size={28} />}
+      </div>
+
+      {/* Mobile Menu */}
+      {open && (
+        <div style={{
+          position: 'absolute',
+          top: '70px',
+          left: 0,
+          width: '100%',
+          backgroundColor: 'white',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '20px 0',
+          gap: '15px',
+          borderTop: '1px solid #eee',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+          zIndex: 40
+        }}>
+          {links.map(link => (
+            <a
+              key={link.name}
+              href={link.href}
+              style={navLinkStyle(link.name)}
+              onMouseEnter={() => setHoveredLink(link.name)}
+              onMouseLeave={() => setHoveredLink(null)}
+              onClick={() => {
+                setActiveLink(link.name);
+                setOpen(false); // close menu on mobile click
+              }}
+            >
+              {link.name}
+            </a>
+          ))}
+        </div>
+      )}
     </nav>
   );
 };
