@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { MapPin, Phone, Mail } from 'lucide-react';
-import Navbar from '../component/Navbar'; 
-import Footer from '../component/Footer';
 
 // Import all your gallery images
 import Img from '../assets/img1.jpg';
@@ -47,7 +45,6 @@ const Home: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', fontFamily: 'sans-serif', backgroundColor: '#fff' }}>
-      <Navbar />
 
       {/* 1. HERO SECTION */}
       <header style={{ 
@@ -165,7 +162,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

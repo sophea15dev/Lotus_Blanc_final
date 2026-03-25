@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
 import { Calendar, Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom'; // 1. Added Link and useLocation
 import logo from '../assets/PSE_LOTUSBLANC-04.png'; 
 
 const Navbar: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-  const [activeLink, setActiveLink] = useState('Home'); // default active
+  const location = useLocation(); // To track which page we are on
 
   const links = [
-    { name: 'Home', href: '#home' },
+    { name: 'Home', href: '/' },
     { name: 'Menu', href: '#menu' },
     { name: 'Contact', href: '#contact' },
   ];
 
-  const navLinkStyle = (link: string) => ({
-    color: activeLink === link ? '#FF7043' : hoveredLink === link ? '#FF7043' : '#2C3E50',
+  // Helper to check if a link is active
+  const isActive = (path: string) => location.pathname === path;
+
+  const navLinkStyle = (linkName: string, path: string): React.CSSProperties => ({
+    color: isActive(path) || hoveredLink === linkName ? '#FF7043' : '#2C3E50',
     textDecoration: 'none',
     fontWeight: 'bold',
     fontSize: '18px',
@@ -23,7 +27,7 @@ const Navbar: React.FC = () => {
     cursor: 'pointer',
   });
 
-  const buttonStyle = {
+  const buttonStyle: React.CSSProperties = {
     backgroundColor: '#FF7043',
     color: 'white',
     padding: '10px 30px',
@@ -37,6 +41,7 @@ const Navbar: React.FC = () => {
     boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
     fontSize: '18px',
     fontFamily: 'Work Sans',
+    textDecoration: 'none', // Important: removes underline from Link
   };
 
   return (
@@ -49,53 +54,53 @@ const Navbar: React.FC = () => {
       borderBottom: '1px solid #eee',
       fontFamily: 'Work Sans',
       position: 'relative',
-      flexWrap: 'wrap'
+      flexWrap: 'wrap',
+      zIndex: 100
     }}>
       {/* LEFT: Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+      <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '15px', textDecoration: 'none' }}>
         <img src={logo} alt="Lotus Logo" style={{ height: '50px', width: 'auto' }} />
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: '26px', fontWeight: '900', fontStyle: 'italic', color: '#2C3E50' }}>
+          <span style={{ fontSize: '26px', fontWeight: '900', fontStyle: 'italic', color: '#2C3E50', lineHeight: '1' }}>
             Lotus Blanc
           </span>
-          <span style={{ fontSize: '9px', letterSpacing: '3px', color: '#3B82F6', fontWeight: 'bold', marginTop: '-4px' }}>
+          <span style={{ fontSize: '9px', letterSpacing: '3px', color: '#3B82F6', fontWeight: 'bold', marginTop: '4px' }}>
             FINE DINING & BAKERY
           </span>
         </div>
-      </div>
+      </Link>
 
-      {/* CENTER: Links */}
+      {/* CENTER: Desktop Links */}
       <div style={{
         display: 'flex',
         gap: '20px',
         alignItems: 'center',
-      }}>
+      }} className="hidden md:flex">
         {links.map(link => (
-          <a
+          <Link
             key={link.name}
-            href={link.href}
-            style={navLinkStyle(link.name)}
+            to={link.href}
+            style={navLinkStyle(link.name, link.href)}
             onMouseEnter={() => setHoveredLink(link.name)}
             onMouseLeave={() => setHoveredLink(null)}
-            onClick={() => setActiveLink(link.name)}
           >
             {link.name}
-          </a>
+          </Link>
         ))}
       </div>
 
-      {/* RIGHT: Reservation Button */}
-      <button style={buttonStyle}>
+      {/* RIGHT: Reservation Button (Now a Link) */}
+      <Link to="/book" style={buttonStyle}>
         <Calendar size={20} />
         <span>Reservation</span>
-      </button>
+      </Link>
 
       {/* Hamburger Icon (mobile) */}
-      <div className="hamburger" onClick={() => setOpen(!open)} style={{
-        display: 'none',
+      <div onClick={() => setOpen(!open)} style={{
+        display: 'none', // You should handle this with media queries in CSS
         cursor: 'pointer',
         zIndex: 50
-      }}>
+      }} className="mobile-toggle">
         {open ? <X size={28} /> : <Menu size={28} />}
       </div>
 
@@ -103,7 +108,7 @@ const Navbar: React.FC = () => {
       {open && (
         <div style={{
           position: 'absolute',
-          top: '70px',
+          top: '100%',
           left: 0,
           width: '100%',
           backgroundColor: 'white',
@@ -117,19 +122,14 @@ const Navbar: React.FC = () => {
           zIndex: 40
         }}>
           {links.map(link => (
-            <a
+            <Link
               key={link.name}
-              href={link.href}
-              style={navLinkStyle(link.name)}
-              onMouseEnter={() => setHoveredLink(link.name)}
-              onMouseLeave={() => setHoveredLink(null)}
-              onClick={() => {
-                setActiveLink(link.name);
-                setOpen(false); // close menu on mobile click
-              }}
+              to={link.href}
+              style={navLinkStyle(link.name, link.href)}
+              onClick={() => setOpen(false)}
             >
               {link.name}
-            </a>
+            </Link>
           ))}
         </div>
       )}
