@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const categories = [
   {
@@ -7,7 +8,7 @@ const categories = [
       "https://cdn.prod.website-files.com/65ee90198a5b84738143d979/65fbc8afaffa13bb08fafd11_Christmas%20Teatime.jpg",
   },
   {
-    name: "Asian  Food",
+    name: "Asian Food",
     image:
       "https://www.bcn.travel/wp-content/uploads/asian-cuisine-in-barcelona.jpg",
   },
@@ -68,6 +69,7 @@ const dishes = [
 ];
 
 export default function MenuPage() {
+  const navigate = useNavigate();
   return (
     <div className="bg-white min-h-screen px-4 sm:px-6 md:px-10 py-6">
       {/* Header */}
@@ -93,7 +95,12 @@ export default function MenuPage() {
               {cat.name}
             </h3>
 
-            <button className="px-5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-full text-sm transition">
+            <button
+              onClick={() =>
+                navigate("/list", { state: { category: cat.name } })
+              }
+              className="px-5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-full text-sm transition"
+            >
               View More
             </button>
           </div>
