@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { MapPin, Phone, Mail } from 'lucide-react';
 import Navbar from '../component/Navbar'; 
 import Footer from '../component/Footer';
 
-// Import all your gallery images here (add more as needed)
+// Import all your gallery images
 import Img from '../assets/img1.jpg';
 import Img1 from '../assets/img2.jpg';
 import Img2 from '../assets/img3.jpg';
@@ -16,8 +16,35 @@ import Img8 from '../assets/img9.jpg';
 import Img9 from '../assets/img10.jpg';
 import Img10 from '../assets/img11.jpg';
 import Img11 from '../assets/img12.jpg';
+import Img12 from '../assets/img13.jpg';
+import Img13 from '../assets/img14.jpg';
+import Img15 from '../assets/img15.jpg';
 
-const Home = () => {
+const images = [Img, Img1, Img2, Img3, Img4, Img5, Img6, Img7, Img8, Img9, Img10, Img11, Img12, Img13, Img15];
+
+const Home: React.FC = () => {
+  const galleryRef = useRef<HTMLDivElement>(null);
+
+  // IntersectionObserver for fade-in animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const imgs = galleryRef.current?.querySelectorAll('.fade-in');
+    imgs?.forEach((img) => observer.observe(img));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', fontFamily: 'sans-serif', backgroundColor: '#fff' }}>
       <Navbar />
@@ -33,16 +60,17 @@ const Home = () => {
         backgroundPosition: 'center', 
         color: 'white'
       }}>
-        <h1 className="fade-in"style={{ fontSize: '50px', fontWeight: 'bold' }}>
-             Welcome to Lotus Blanc
+        <h1 className="fade-in" style={{ fontSize: '50px', fontWeight: 'bold' }}>
+          Welcome to Lotus Blanc
         </h1>      
-        </header>
+      </header>
 
       {/* 2. ABOUT & CONTACT INFO */}
-<section 
-  className="fade-in"
-  style={{ padding: '60px 40px', maxWidth: '1200px', margin: '0 auto', display: 'flex', gap: '60px' }}>       
-   <div style={{ flex: 1 }}>
+      <section 
+        className="fade-in"
+        style={{ padding: '100px 40px', maxWidth: '1200px', margin: '0 auto', display: 'flex', gap: '60px' }}
+      >       
+        <div style={{ flex: 1 }}>
           <h2 style={{ color: '#FF7043', fontSize: '24px', marginBottom: '20px' }}>About Lotus Blanc</h2>
           <p style={{ lineHeight: '1.8', color: '#555' }}>
             Lotus Blanc is a training restaurant dedicated to providing professional hospitality 
@@ -50,55 +78,59 @@ const Home = () => {
           </p>
         </div>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          <div style={{ display: 'flex', gap: '10px' }}><MapPin color="#FF7043"/> <span>#420, Tchecoslovaquie Blvd (St. 163), Phnom Penh</span></div>
-          <div style={{ display: 'flex', gap: '10px' }}><Phone color="#FF7043"/> <span>+855 (0) 23 995 651</span></div>
-          <div style={{ display: 'flex', gap: '10px' }}><Mail color="#FF7043"/> <span>booking@pse.ngo</span></div>
+          <div style={{ display: 'flex', gap: '9px' }}><MapPin color="#FF7043"/> <span>#420, Tchecoslovaquie Blvd (St. 163), Phnom Penh</span></div>
+          <div style={{ display: 'flex', gap: '9px' }}><Phone color="#FF7043"/> <span>+855 (0) 23 995 651</span></div>
+          <div style={{ display: 'flex', gap: '9px' }}><Mail color="#FF7043"/> <span>booking@pse.ngo</span></div>
         </div>
       </section>
 
-      {/* 3. GALLERY - Now with different images */}
-      <section style={{ padding: '40px 20px', backgroundColor: '#fdfdfd', textAlign: 'center' }}>
-        <h2 style={{ 
-          fontSize: '32px', 
-          marginBottom: '40px', 
-          textDecoration: 'underline', 
-          color: '#2C3E50', 
-          textUnderlineOffset: '10px' 
-        }}>
+      {/* 3. GALLERY SECTION */}
+      <section style={{ padding: "40px 20px", backgroundColor: "#fdfdfd", textAlign: "center" }}>
+        <h2
+          style={{
+            fontSize: "32px",
+            marginBottom: "40px",
+            textDecoration: "underline",
+            color: "#2C3E50",
+            textUnderlineOffset: "10px",
+          }}
+        >
           Gallery
         </h2>
-        
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(4, 1fr)', 
-          gap: '15px', 
-          maxWidth: '1100px', 
-          margin: '0 auto' 
-        }}>
-         {[Img, Img1, Img2, Img3, Img4, Img5, Img6, Img7, Img8, Img9, Img10, Img11].map((image, i) => (
-        <div 
-         key={i} 
-         className="fade-in"
-        style={{ 
-        height: '180px', 
-        borderRadius: '8px', 
-        overflow: 'hidden', 
-        boxShadow: '0 3px 5px rgba(0,0,0,0.1)',
-        animationDelay: `${i * 0.1}s`
-        }}
+
+        <div
+          ref={galleryRef}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(5, 1fr)",
+            gap: "15px",
+            maxWidth: "1100px",
+            margin: "0 auto",
+          }}
         >
-    <img 
-      src={image} 
-      className="gallery-img"
-      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-      alt={`Gallery ${i + 1}`} 
-    />
-  </div>
-        ))}
+          {images.map((image, i) => (
+            <div
+              key={i}
+              className="fade-in"
+              style={{
+                height: "180px",
+                borderRadius: "8px",
+                overflow: "hidden",
+                boxShadow: "0 3px 5px rgba(0,0,0,0.1)",
+              }}
+            >
+              <img
+                src={image}
+                className="gallery-img"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                alt={`Gallery ${i + 1}`}
+              />
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* --- DIRECTION SECTION --- */}
+      {/* 4. DIRECTION SECTION */}
       <section style={{ padding: '8px 20px', textAlign: 'center', backgroundColor: '#fff' }}>
         <h2 style={{ 
           fontSize: '32px', 
@@ -139,6 +171,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-
