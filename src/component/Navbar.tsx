@@ -1,72 +1,51 @@
-import React from 'react';
-import { Calendar } from 'lucide-react';
-import logo from '../assets/PSE_LOTUSBLANC-04.png'; 
+import React from "react";
+import { Link } from "react-router-dom"; // Essential for routing
+import { Calendar } from "lucide-react";
+import logo from "../assets/PSE_LOTUSBLANC-04.png";
 
 const Navbar: React.FC = () => {
-  // Common Styles to keep the code "Clean"
-  const navLinkStyle = {
-    color: '#2C3E50',
-    textDecoration: 'none',
-    fontWeight: 'bold',
-    fontSize: '18px',
-    margin: '0 20px'
-  };
-
-  const buttonStyle = {
-    backgroundColor: '#FF7043',
-    color: 'white',
-    padding: '10px 30px',
-    borderRadius: '50px',
-    border: 'none',
-    fontWeight: 'bold',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    cursor: 'pointer',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-    fontSize: '18px',
-    fontFamily: 'Work Sans' 
-
-
-  };
-
   return (
-    <nav style={{ 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'space-between', 
-      padding: '15px 100px', 
-      backgroundColor: 'white',
-      borderBottom: '1px solid #eee',
-      fontFamily: 'Work Sans' 
-    }}>
-      
+    <nav className="flex items-center justify-between px-[100px] py-[15px] bg-white border-b border-gray-100 font-['Work_Sans']">
       {/* 1. LEFT: Logo & Text */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-        <img src={logo} alt="Lotus Logo" style={{ height: '50px', width: 'auto' }} />
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: '26px', fontWeight: '900', fontStyle: 'italic', color: '#2C3E50' }}>
+      <Link to="/" className="flex items-center gap-[15px] no-underline">
+        <img src={logo} alt="Lotus Logo" className="h-[50px] w-auto" />
+        <div className="flex flex-col">
+          <span className="text-[26px] font-[900] italic text-[#2C3E50] leading-none">
             Lotus Blanc
           </span>
-          <span style={{ fontSize: '9px', letterSpacing: '3px', color: '#3B82F6', fontWeight: 'bold', marginTop: '-4px' }}>
+          <span className="text-[9px] tracking-[3px] text-[#3B82F6] font-bold mt-[2px]">
             FINE DINING & BAKERY
           </span>
         </div>
-      </div>
+      </Link>
 
-      {/* 2. CENTER: Links with proper spacing */}
-      <div style={{ display: 'flex' }}>
-        <a href="#home" style={navLinkStyle}>Home</a>
-        <a href="#menu" style={navLinkStyle}>Menu</a>
-        <a href="#contact" style={navLinkStyle}>Contact</a>
+      {/* 2. CENTER: Links */}
+      <div className="flex gap-[40px]">
+        <Link
+          to="/"
+          className="text-[#2C3E50] no-underline font-bold text-[18px] hover:text-[#FF7043] transition-colors"
+        >
+          Home
+        </Link>
+        <Link
+          to="/menu"
+          className="text-[#2C3E50] no-underline font-bold text-[18px] hover:text-[#FF7043] transition-colors"
+        >
+          Menu
+        </Link>
+        <Link
+          to="/contact"
+          className="text-[#2C3E50] no-underline font-bold text-[18px] hover:text-[#FF7043] transition-colors"
+        >
+          Contact
+        </Link>
       </div>
 
       {/* 3. RIGHT: The Orange Pill Button */}
-      <button style={buttonStyle}>
+      <button className="bg-[#FF7043] text-white px-[30px] py-[10px] rounded-full font-bold flex items-center gap-[8px] cursor-pointer shadow-md hover:bg-[#e65d34] transition-all text-[18px]">
         <Calendar size={20} />
         <span>Reservation</span>
       </button>
-
     </nav>
   );
 };

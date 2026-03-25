@@ -1,8 +1,16 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
 /* Add this to make sure your fonts look clean like the design */
+/* body {
+  margin: 0;
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+} */
+@import "tailwindcss";
+
+/* Your custom styles below */
 body {
   margin: 0;
   font-family: sans-serif;
