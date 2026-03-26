@@ -21,15 +21,17 @@ import Img15 from '../assets/img15.jpg';
 const images = [Img, Img1, Img2, Img3, Img4, Img5, Img6, Img7, Img8, Img9, Img10, Img11, Img12, Img13, Img15];
 
 const Home: React.FC = () => {
-  const galleryRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  // IntersectionObserver for fade-in animation
+  // IntersectionObserver for the fade-in animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
+            // Tailwind classes to trigger the animation
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            entry.target.classList.remove('opacity-0', 'translate-y-10');
             observer.unobserve(entry.target);
           }
         });
@@ -37,89 +39,68 @@ const Home: React.FC = () => {
       { threshold: 0.1 }
     );
 
-    const imgs = galleryRef.current?.querySelectorAll('.fade-in');
-    imgs?.forEach((img) => observer.observe(img));
+    const elements = scrollRef.current?.querySelectorAll('.reveal');
+    elements?.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', fontFamily: 'sans-serif', backgroundColor: '#fff' }}>
+    <div ref={scrollRef} className="flex flex-col min-h-screen bg-white font-sans overflow-x-hidden">
 
       {/* 1. HERO SECTION */}
-      <header style={{ 
-        height: '450px', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200")',
-        backgroundSize: 'cover', 
-        backgroundPosition: 'center', 
-        color: 'white'
-      }}>
-        <h1 className="fade-in" style={{ fontSize: '50px', fontWeight: 'bold' }}>
+      <header 
+        className="h-[450px] flex items-center justify-center bg-cover bg-center relative"
+        style={{ 
+          backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200")' 
+        }}
+      >
+        <h1 className="reveal opacity-0 translate-y-10 transition-all duration-1000 text-[50px] font-bold text-white text-center px-4">
           Welcome to Lotus Blanc
         </h1>      
       </header>
 
       {/* 2. ABOUT & CONTACT INFO */}
-      <section 
-        className="fade-in"
-        style={{ padding: '100px 40px', maxWidth: '1200px', margin: '0 auto', display: 'flex', gap: '60px' }}
-      >       
-        <div style={{ flex: 1 }}>
-          <h2 style={{ color: '#FF7043', fontSize: '24px', marginBottom: '20px' }}>About Lotus Blanc</h2>
-          <p style={{ lineHeight: '1.8', color: '#555' }}>
+      <section className="reveal opacity-0 translate-y-10 transition-all duration-1000 py-[100px] px-[40px] max-w-[1200px] mx-auto flex flex-col md:flex-row gap-[60px]">       
+        <div className="flex-1">
+          <h2 className="text-[#FF7043] text-[24px] mb-[20px] font-semibold">About Lotus Blanc</h2>
+          <p className="leading-[1.8] text-[#555]">
             Lotus Blanc is a training restaurant dedicated to providing professional hospitality 
             training for Cambodian youth. Our students provide fine dining service under expert supervision.
           </p>
         </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          <div style={{ display: 'flex', gap: '9px' }}><MapPin color="#FF7043"/> <span>#420, Tchecoslovaquie Blvd (St. 163), Phnom Penh</span></div>
-          <div style={{ display: 'flex', gap: '9px' }}><Phone color="#FF7043"/> <span>+855 (0) 23 995 651</span></div>
-          <div style={{ display: 'flex', gap: '9px' }}><Mail color="#FF7043"/> <span>booking@pse.ngo</span></div>
+        <div className="flex-1 flex flex-col gap-[15px] text-gray-700">
+          <div className="flex gap-[9px] items-start">
+            <MapPin className="text-[#FF7043] shrink-0" /> 
+            <span>#420, Tchecoslovaquie Blvd (St. 163), Phnom Penh</span>
+          </div>
+          <div className="flex gap-[9px] items-center">
+            <Phone className="text-[#FF7043] shrink-0" /> 
+            <span>+855 (0) 23 995 651</span>
+          </div>
+          <div className="flex gap-[9px] items-center">
+            <Mail className="text-[#FF7043] shrink-0" /> 
+            <span>booking@pse.ngo</span>
+          </div>
         </div>
       </section>
 
       {/* 3. GALLERY SECTION */}
-      <section style={{ padding: "40px 20px", backgroundColor: "#fdfdfd", textAlign: "center" }}>
-        <h2
-          style={{
-            fontSize: "32px",
-            marginBottom: "40px",
-            textDecoration: "underline",
-            color: "#2C3E50",
-            textUnderlineOffset: "10px",
-          }}
-        >
+      <section className="py-[40px] px-[20px] bg-[#fdfdfd] text-center">
+        <h2 className="text-[32px] mb-[40px] text-[#2C3E50] underline underline-offset-[10px] decoration-1">
           Gallery
         </h2>
 
-        <div
-          ref={galleryRef}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(5, 1fr)",
-            gap: "15px",
-            maxWidth: "1100px",
-            margin: "0 auto",
-          }}
-        >
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-[15px] max-w-[1100px] mx-auto">
           {images.map((image, i) => (
             <div
               key={i}
-              className="fade-in"
-              style={{
-                height: "180px",
-                borderRadius: "8px",
-                overflow: "hidden",
-                boxShadow: "0 3px 5px rgba(0,0,0,0.1)",
-              }}
+              className="reveal opacity-0 translate-y-10 transition-all duration-700 h-[180px] rounded-[8px] overflow-hidden shadow-[0_3px_5px_rgba(0,0,0,0.1)] group"
+              style={{ transitionDelay: `${i * 50}ms` }}
             >
               <img
                 src={image}
-                className="gallery-img"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 alt={`Gallery ${i + 1}`}
               />
             </div>
@@ -128,33 +109,18 @@ const Home: React.FC = () => {
       </section>
 
       {/* 4. DIRECTION SECTION */}
-      <section style={{ padding: '8px 20px', textAlign: 'center', backgroundColor: '#fff' }}>
-        <h2 style={{ 
-          fontSize: '32px', 
-          marginBottom: '40px', 
-          color: '#003366', 
-          textDecoration: 'underline', 
-          textUnderlineOffset: '8px',
-          fontWeight: 'bold' 
-        }}>
+      <section className="py-[8px] px-[20px] text-center bg-white mb-20">
+        <h2 className="reveal opacity-0 translate-y-10 transition-all duration-700 text-[32px] mb-[40px] text-[#003366] font-bold underline underline-offset-[8px] decoration-1">
           Direction
         </h2>
         
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ 
-            width: '100%', 
-            height: '500px', 
-            borderRadius: '10px', 
-            overflow: 'hidden', 
-            boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-            border: '1px solid #ddd',
-            position: 'relative'
-          }}>
+        <div className="max-w-[1100px] mx-auto reveal opacity-0 translate-y-10 transition-all duration-1000 delay-200">
+          <div className="w-full h-[500px] rounded-[10px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.1)] border border-[#ddd] relative">
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3909.013917415162!2d104.91238477585375!3d11.550882344406263!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310951167a5b3a4d%3A0x600c0179975f850e!2sLotus%20Blanc%20Training%20Restaurant!5e0!3m2!1sen!2skh!4v1711200000000!5m2!1sen!2skh" 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.8718919018413!2d104.9123893148098!3d11.560641991792193!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3109513e00000001%3A0x7d87d9a8c6a0c20a!2sLotus%20Blanc%20Restaurant!5e0!3m2!1sen!2skh!4v1647845678901!5m2!1sen!2skh" 
               width="100%" 
               height="100%" 
-              style={{ border: 0 }} 
+              className="border-0" 
               allowFullScreen 
               loading="lazy"
             ></iframe>
