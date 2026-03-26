@@ -1,132 +1,101 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/PSE_LOTUSBLANC-04.png'; 
 
 const Navbar: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-  const [activeLink, setActiveLink] = useState('Home'); // default active
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const links = [
-    { name: 'Home', href: '#home' },
-    { name: 'Menu', href: '#menu' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '/' },
+    { name: 'Menu', href: '/menu' }, // Note: If using router, usually /menu instead of #menu
+    { name: 'Contact', href: '/contact' },
   ];
 
-  const navLinkStyle = (link: string) => ({
-    color: activeLink === link ? '#FF7043' : hoveredLink === link ? '#FF7043' : '#2C3E50',
-    textDecoration: 'none',
-    fontWeight: 'bold',
-    fontSize: '18px',
-    margin: '0 20px',
-    transition: 'color 0.3s',
-    cursor: 'pointer',
-  });
+  // Close mobile menu on navigation or window resize
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
 
-  const buttonStyle = {
-    backgroundColor: '#FF7043',
-    color: 'white',
-    padding: '10px 30px',
-    borderRadius: '50px',
-    border: 'none',
-    fontWeight: 'bold',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    cursor: 'pointer',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-    fontSize: '18px',
-    fontFamily: 'Work Sans',
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setIsOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '15px 100px',
-      backgroundColor: 'white',
-      borderBottom: '1px solid #eee',
-      fontFamily: 'Work Sans',
-      position: 'relative',
-      flexWrap: 'wrap'
-    }}>
-      {/* LEFT: Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-        <img src={logo} alt="Lotus Logo" style={{ height: '50px', width: 'auto' }} />
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: '26px', fontWeight: '900', fontStyle: 'italic', color: '#2C3E50' }}>
-            Lotus Blanc
-          </span>
-          <span style={{ fontSize: '9px', letterSpacing: '3px', color: '#3B82F6', fontWeight: 'bold', marginTop: '-4px' }}>
-            FINE DINING & BAKERY
-          </span>
+    <nav className="relative z-[100] bg-white border-b border-gray-100 font-['Work_Sans']">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="flex justify-between items-center h-20">
+          
+          {/* LEFT: Logo & Brand */}
+          <Link to="/" className="flex items-center gap-3 shrink-0 group">
+            <img src={logo} alt="Lotus Logo" className="h-12 w-auto transition-transform group-hover:scale-105" />
+            <div className="flex flex-col">
+              <span className="text-2xl font-black italic text-slate-800 leading-none">
+                Lotus Blanc
+              </span>
+              <span className="text-[9px] tracking-[3px] text-blue-500 font-bold mt-1">
+                FINE DINING & BAKERY
+              </span>
+            </div>
+          </Link>
+
+          {/* CENTER: Desktop Links */}
+          <div className="hidden md:flex items-center space-x-8">
+            {links.map((link) => (
+              <Link
+                key={link.name}
+                to={link.href}
+                className={`text-lg font-bold transition-colors duration-300 hover:text-[#FF7043] ${
+                  isActive(link.href) ? 'text-[#FF7043]' : 'text-slate-700'
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+
+          {/* RIGHT: Actions */}
+          <div className="flex items-center gap-4">
+            <Link 
+              to="/book" 
+              className="hidden sm:flex items-center gap-2 bg-[#FF7043] text-white px-6 py-2.5 rounded-full font-bold shadow-md hover:bg-[#e6643c] transition-all hover:shadow-lg active:scale-95"
+            >
+              <Calendar size={18} />
+              <span>Reservation</span>
+            </Link>
+
+            {/* Mobile Toggle */}
+            <button 
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden p-2 text-slate-700 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Toggle Menu"
+            >
+              {isOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* CENTER: Links */}
-      <div style={{
-        display: 'flex',
-        gap: '20px',
-        alignItems: 'center',
-      }}>
-        {links.map(link => (
-          <a
-            key={link.name}
-            href={link.href}
-            style={navLinkStyle(link.name)}
-            onMouseEnter={() => setHoveredLink(link.name)}
-            onMouseLeave={() => setHoveredLink(null)}
-            onClick={() => setActiveLink(link.name)}
-          >
-            {link.name}
-          </a>
-        ))}
-      </div>
-
-      {/* RIGHT: Reservation Button */}
-      <button style={buttonStyle}>
-        <Calendar size={20} />
-        <span>Reservation</span>
-      </button>
-
-      {/* Hamburger Icon (mobile) */}
-      <div className="hamburger" onClick={() => setOpen(!open)} style={{
-        display: 'none',
-        cursor: 'pointer',
-        zIndex: 50
-      }}>
-        {open ? <X size={28} /> : <Menu size={28} />}
-      </div>
-
-      {/* Mobile Menu */}
-      {open && (
-        <div style={{
-          position: 'absolute',
-          top: '70px',
-          left: 0,
-          width: '100%',
-          backgroundColor: 'white',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: '20px 0',
-          gap: '15px',
-          borderTop: '1px solid #eee',
-          boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
-          zIndex: 40
-        }}>
-          {links.map(link => (
-            <a
+      {/* MOBILE MENU: Dropdown */}
+      <div className={`
+        absolute top-full left-0 w-full bg-white border-b border-gray-100 shadow-xl transition-all duration-300 ease-in-out md:hidden
+        ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}
+      `}>
+        <div className="px-4 pt-2 pb-6 space-y-2 flex flex-col items-center">
+          {links.map((link) => (
+            <Link
               key={link.name}
-              href={link.href}
-              style={navLinkStyle(link.name)}
-              onMouseEnter={() => setHoveredLink(link.name)}
-              onMouseLeave={() => setHoveredLink(null)}
-              onClick={() => {
-                setActiveLink(link.name);
-                setOpen(false); // close menu on mobile click
-              }}
+              to={link.href}
+              className={`w-full text-center py-3 text-lg font-bold rounded-xl ${
+                isActive(link.href) ? 'bg-orange-50 text-[#FF7043]' : 'text-slate-700 hover:bg-gray-50'
+              }`}
             >
               {link.name}
             </Link>
