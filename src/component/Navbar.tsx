@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { Calendar, Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -10,11 +9,10 @@ const Navbar: React.FC = () => {
 
   const links = [
     { name: 'Home', href: '/' },
-    { name: 'Menu', href: '/menu' }, // Note: If using router, usually /menu instead of #menu
+    { name: 'Menu', href: '/menu' },
     { name: 'Contact', href: '/contact' },
   ];
 
-  // Close mobile menu on navigation or window resize
   useEffect(() => {
     setIsOpen(false);
   }, [location]);
@@ -72,7 +70,6 @@ const Navbar: React.FC = () => {
               <span>Reservation</span>
             </Link>
 
-            {/* Mobile Toggle */}
             <button 
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 text-slate-700 hover:bg-gray-100 rounded-lg transition-colors"
@@ -81,31 +78,10 @@ const Navbar: React.FC = () => {
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
-=======
-import React from "react";
-import { Link } from "react-router-dom"; // Essential for routing
-import { Calendar } from "lucide-react";
-import logo from "../assets/PSE_LOTUSBLANC-04.png";
-
-const Navbar: React.FC = () => {
-  return (
-    <nav className="flex items-center justify-between px-[100px] py-[15px] bg-white border-b border-gray-100 font-['Work_Sans']">
-      {/* 1. LEFT: Logo & Text */}
-      <Link to="/" className="flex items-center gap-[15px] no-underline">
-        <img src={logo} alt="Lotus Logo" className="h-[50px] w-auto" />
-        <div className="flex flex-col">
-          <span className="text-[26px] font-[900] italic text-[#2C3E50] leading-none">
-            Lotus Blanc
-          </span>
-          <span className="text-[9px] tracking-[3px] text-[#3B82F6] font-bold mt-[2px]">
-            FINE DINING & BAKERY
-          </span>
->>>>>>> origin/list-Menu
         </div>
-      </Link>
+      </div>
 
-<<<<<<< HEAD
-      {/* MOBILE MENU: Dropdown */}
+      {/* MOBILE MENU */}
       <div className={`
         absolute top-full left-0 w-full bg-white border-b border-gray-100 shadow-xl transition-all duration-300 ease-in-out md:hidden
         ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}
@@ -131,35 +107,6 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
       </div>
-=======
-      {/* 2. CENTER: Links */}
-      <div className="flex gap-[40px]">
-        <Link
-          to="/"
-          className="text-[#2C3E50] no-underline font-bold text-[18px] hover:text-[#FF7043] transition-colors"
-        >
-          Home
-        </Link>
-        <Link
-          to="/menu"
-          className="text-[#2C3E50] no-underline font-bold text-[18px] hover:text-[#FF7043] transition-colors"
-        >
-          Menu
-        </Link>
-        <Link
-          to="/contact"
-          className="text-[#2C3E50] no-underline font-bold text-[18px] hover:text-[#FF7043] transition-colors"
-        >
-          Contact
-        </Link>
-      </div>
-
-      {/* 3. RIGHT: The Orange Pill Button */}
-      <button className="bg-[#FF7043] text-white px-[30px] py-[10px] rounded-full font-bold flex items-center gap-[8px] cursor-pointer shadow-md hover:bg-[#e65d34] transition-all text-[18px]">
-        <Calendar size={20} />
-        <span>Reservation</span>
-      </button>
->>>>>>> origin/list-Menu
     </nav>
   );
 };

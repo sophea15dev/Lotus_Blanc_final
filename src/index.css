@@ -1,7 +1,5 @@
-<<<<<<< HEAD
 @import "tailwindcss";
 
-/* Keep your custom fixes below the import */
 .react-datepicker-wrapper,
 .react-datepicker__input-container,
 .react-datepicker__input-container input {
@@ -9,31 +7,10 @@
   display: block !important;
 }
 
-/* If you want to use @apply for the body, do it like this now: */
 @layer base {
   body {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: 'Work Sans', sans-serif;
   }
 }
-=======
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
-
-/* Add this to make sure your fonts look clean like the design */
-/* body {
-  margin: 0;
-  font-family: sans-serif;
-  -webkit-font-smoothing: antialiased;
-} */
-@import "tailwindcss";
-
-/* Your custom styles below */
-body {
-  margin: 0;
-  font-family: sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
->>>>>>> origin/list-Menu
