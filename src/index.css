@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import "tailwindcss";
 
 /* Keep your custom fixes below the import */
@@ -16,3 +17,23 @@
     font-family: sans-serif;
   }
 }
+=======
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+/* Add this to make sure your fonts look clean like the design */
+/* body {
+  margin: 0;
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+} */
+@import "tailwindcss";
+
+/* Your custom styles below */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+>>>>>>> origin/list-Menu
