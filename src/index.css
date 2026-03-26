@@ -1,18 +1,18 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
-
-/* Add this to make sure your fonts look clean like the design */
-/* body {
-  margin: 0;
-  font-family: sans-serif;
-  -webkit-font-smoothing: antialiased;
-} */
 @import "tailwindcss";
 
-/* Your custom styles below */
-body {
-  margin: 0;
-  font-family: sans-serif;
-  -webkit-font-smoothing: antialiased;
+/* Datepicker Fixes */
+.react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input {
+  width: 100% !important;
+  display: block !important;
+}
+
+/* Base Styles */
+@layer base {
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Work Sans', sans-serif; /* Matching your Navbar font */
+  }
 }

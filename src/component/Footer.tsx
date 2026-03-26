@@ -1,51 +1,75 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import logo from '../assets/PSE_LOTUSBLANC-04.png'; 
 
 const Footer: React.FC = () => {
-  const colStyle = { flex: '1', minWidth: '250px' };
-  const titleStyle = { display: 'block', fontSize: '18px', fontWeight: 'bold', marginBottom: '20px', fontFamily: 'sans-serif' };
-  const linkStyle = { color: 'white', textDecoration: 'none', display: 'block', marginBottom: '10px', opacity: '0.8', fontSize: '14px', fontFamily: 'sans-serif' };
-
   return (
-    <footer style={{ backgroundColor: '#004A61', color: 'white', padding: '60px 80px 20px', marginTop: 'auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '40px', maxWidth: '1200px', margin: '0 auto' }}>
+    <footer className="bg-[#004A61] text-white pt-16 pb-8 px-6 md:px-12 lg:px-20 mt-auto font-sans">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-24">
         
         {/* Column 1: Mission */}
-        <div style={colStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
-            <img src={logo} style={{ height: '35px', filter: 'brightness(0) invert(1)' }} />
-            <span style={{ fontWeight: 'bold', fontSize: '18px' }}>Our Mission</span>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            {/* brightness-0 invert-100 makes the logo solid white */}
+            <img 
+              src={logo} 
+              alt="Lotus Logo" 
+              className="h-10 w-auto brightness-0 invert" 
+            />
+            <span className="font-bold text-xl tracking-wide">Our Mission</span>
           </div>
-          <p style={{ fontSize: '14px', lineHeight: '1.6', opacity: '0.8', fontFamily: 'sans-serif' }}>
-            Lotus Blanc is a training restaurant dedicated to empowering Cambodian youth through professional hospitality training. Your patronage directly supports their futures.
+          <p className="text-sm leading-relaxed opacity-80 max-w-sm">
+            Lotus Blanc is a training restaurant dedicated to empowering Cambodian youth 
+            through professional hospitality training. Your patronage directly supports 
+            their futures and the PSE mission.
           </p>
         </div>
 
         {/* Column 2: Quick Links */}
-        <div style={colStyle}>
-          <span style={titleStyle}>Quick Links</span>
-          <a href="#" style={linkStyle}>Home</a>
-          <a href="#" style={linkStyle}>Menu</a>
-          <a href="#" style={linkStyle}>Cooking Classes</a>
-          <a href="#" style={linkStyle}>About PSE (The NGO)</a>
-          <a href="#" style={linkStyle}>Support Us</a>
+        <div className="flex flex-col space-y-4">
+          <span className="text-lg font-bold mb-2">Quick Links</span>
+          <nav className="flex flex-col space-y-3">
+            {['Home', 'Menu', 'Cooking Classes', 'About PSE', 'Support Us'].map((item) => (
+              <Link 
+                key={item} 
+                to={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
+                className="text-sm opacity-70 hover:opacity-100 hover:translate-x-1 transition-all duration-200"
+              >
+                {item}
+              </Link>
+            ))}
+          </nav>
         </div>
 
         {/* Column 3: Contact & Hours */}
-        <div style={colStyle}>
-          <span style={titleStyle}>Contact & Hours</span>
-          <div style={{ fontSize: '14px', lineHeight: '1.8', opacity: '0.8', fontFamily: 'sans-serif' }}>
-            <p><strong>Address:</strong> #420 Tchecoslovaquie Blvd (St. 163)</p>
-            <p><strong>Breakfast:</strong> Mon-Fri, 7:30 AM – 9:00 AM</p>
-            <p><strong>Lunch:</strong> Mon-Fri, 12:00 PM – 2:00 PM</p>
-            <p><strong>Email:</strong> booking@pse.ngo</p>
+        <div className="flex flex-col space-y-4">
+          <span className="text-lg font-bold mb-2">Contact & Hours</span>
+          <div className="text-sm space-y-4 opacity-80 leading-relaxed">
+            <p>
+              <strong className="block text-white opacity-100">Address:</strong>
+              #420 Tchecoslovaquie Blvd (St. 163), Phnom Penh
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <strong className="block text-white opacity-100">Breakfast:</strong>
+                Mon-Fri, 7:30 – 9:00 AM
+              </div>
+              <div>
+                <strong className="block text-white opacity-100">Lunch:</strong>
+                Mon-Fri, 12:00 – 2:00 PM
+              </div>
+            </div>
+            <p>
+              <strong className="block text-white opacity-100">Email:</strong>
+              booking@pse.ngo
+            </p>
           </div>
         </div>
       </div>
       
       {/* Bottom Copyright */}
-      <div style={{ textAlign: 'center', marginTop: '50px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '12px', opacity: '0.5', fontFamily: 'sans-serif' }}>
-        © 2026 Lotus Blanc Training Restaurant
+      <div className="mt-16 pt-8 border-t border-white/10 text-center text-xs opacity-50 tracking-widest">
+        © 2026 LOTUS BLANC TRAINING RESTAURANT | POWERED BY PSE
       </div>
     </footer>
   );
