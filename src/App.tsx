@@ -3,6 +3,7 @@ import Navbar from "./component/Navbar";
 import Footer from "./component/Footer";
 import MenuPage from "./page/Menu";
 import List from "./page/list-menu";
+import Contact from "./page/contact-us";
 // Create a small Home component or import your actual Home page
 const Home = () => (
   <main className="p-10 text-center">
@@ -25,6 +26,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/menu" element={<MenuPage />} />
             <Route path="/list" element={<List />} />
+            <Route path="/contact" element={<Contact />} />
           </Routes>
         </div>
 
