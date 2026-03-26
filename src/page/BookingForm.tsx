@@ -1,10 +1,35 @@
 import React, { useState } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useNavigate } from 'react-router-dom'; // 1. Import useNavigate
 import { Users, Calendar, Clock, Sparkles, MessageSquare, ArrowRight, ChevronDown } from 'lucide-react';
 
 const BookingForm: React.FC = () => {
+  const navigate = useNavigate(); // 2. Initialize navigate
+
+  // Form States
   const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [adults, setAdults] = useState("0");
+  const [children, setChildren] = useState("0");
+  const [time, setTime] = useState("7:30 AM");
+  const [occasion, setOccasion] = useState("Occasion");
+  const [note, setNote] = useState("");
+
+  const handleBooking = () => {
+    // 3. Create the data object to send
+    const bookingData = {
+      bookingId: "BK-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+      adults,
+      children,
+      date: startDate ? startDate.toLocaleDateString('en-GB') : "",
+      time,
+      occasion,
+      note
+    };
+
+    // 4. Navigate to the confirmation route and pass the data
+    navigate('/reservation', { state: bookingData });
+  };
 
   const labelS = "text-[11px] text-[#94a3b8] font-bold uppercase mb-1.5 ml-1";
   const inputS = "w-full py-3 pr-3 pl-[42px] border border-[#ff7043] rounded-[10px] text-sm outline-none bg-white appearance-none focus:ring-1 focus:ring-[#ff7043]";
@@ -16,7 +41,7 @@ const BookingForm: React.FC = () => {
       {/* LEFT IMAGE */}
       <div className="hidden md:block md:w-[40%] p-5">
         <img 
-          src="https://scontent.fpnh10-1.fna.fbcdn.net/v/t39.30808-6/509364838_9747394752036611_557461447383141450_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=7b2446&_nc_ohc=fBoL8IOeUrcQ7kNvwHTJehZ&_nc_oc=AdpJyGFNOZAmECbQYdNxnp9JT5CFYpiy-72q0MWBngSWFAfUjAxdaWaMH9CN7qbB7Dw&_nc_zt=23&_nc_ht=scontent.fpnh10-1.fna&_nc_gid=1phcOdGjc481-MmfXG5lqg&_nc_ss=7a30f&oh=00_AfyRAYG8Vm8FktejdcRzo4om6AhJ4IkLlJ58m9CY97z0bw&oe=69C980F3" 
+          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" 
           className="w-full h-full object-cover rounded-[18px]" 
           alt="Restaurant"
         />
@@ -30,39 +55,33 @@ const BookingForm: React.FC = () => {
         </div>
 
         <div className="flex flex-col gap-5">
-          {/* ROW 1: ADULTS & CHILDREN */}
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col">
               <label className={labelS}>Adults</label>
               <div className="relative">
                 <Users size={18} className={iconL} />
-                 <input 
-                 type="number" 
-                 className={inputS} 
-                 placeholder="0"
-                 min="0"
-                 defaultValue="0"
+                <input 
+                  type="number" 
+                  className={inputS} 
+                  value={adults}
+                  onChange={(e) => setAdults(e.target.value)}
                 />
-
-             </div>
+              </div>
             </div>
             <div className="flex flex-col">
-           <label className={labelS}>Children</label>
-            <div className="relative">
+              <label className={labelS}>Children</label>
+              <div className="relative">
                 <Users size={18} className={iconL} />
-                 <input 
-                 type="number" 
-                 className={inputS} 
-                 placeholder="0"
-                 min="0"
-                 defaultValue="0"
+                <input 
+                  type="number" 
+                  className={inputS} 
+                  value={children}
+                  onChange={(e) => setChildren(e.target.value)}
                 />
-
-             </div>
+              </div>
+            </div>
           </div>
-          </div>
 
-          {/* ROW 2: DATE & TIME */}
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col">
               <label className={labelS}>Choose a Date</label>
@@ -82,50 +101,51 @@ const BookingForm: React.FC = () => {
               <label className={labelS}>Choose Time</label>
               <div className="relative">
                 <Clock size={18} className={iconL} />
-                <select className={inputS} defaultValue="7:30 AM">
+                <select className={inputS} value={time} onChange={(e) => setTime(e.target.value)}>
                   <option>7:30 AM</option>
                   <option>8:00 AM</option>
                   <option>8:30 AM</option>
-                  <option>9:00 AM</option>
+                  <option>9:00 Am</option>
                   <option>9:30 AM</option>
                   <option>10:00 AM</option>
                   <option>10:30 AM</option>
-                  <option>11:00 AM</option>
+                  <option>11:00 AM</option> 
                   <option>11:30 AM</option>
                   <option>12:00 PM</option>
                   <option>12:30 PM</option>
                   <option>1:00 PM</option>
                   <option>1:30 PM</option>
-                  <option>2:00 PM</option>
                 </select>
                 <ChevronDown size={14} className={iconR} />
               </div>
             </div>
           </div>
 
-          {/* OCCASION & INSTRUCTION */}
           <div className="relative">
             <Sparkles size={18} className={iconL} />
-            <select className={inputS}>
+            <select className={inputS} value={occasion} onChange={(e) => setOccasion(e.target.value)}>
               <option>Occasion</option>
               <option>Birthday</option>
               <option>Anniversary</option>
-              <option>Business Meeting</option>
-              <option>Family Gathering</option>
-              <option>Other</option>
             </select>
             <ChevronDown size={16} className={iconR} />
           </div>
 
           <div className="relative">
             <MessageSquare size={18} className="absolute left-[14px] top-[15px] text-black z-10" />
-            <textarea placeholder="Instruction" className={`${inputS} h-[100px] resize-none pt-3`} />
+            <textarea 
+              placeholder="Instruction" 
+              className={`${inputS} h-[100px] resize-none pt-3`} 
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
           </div>
 
-          <p className="text-[16px] text-[#94a3b8] text-center italic">Bookings can be canceled up to 2 days in advance.</p>
-
           <div className="flex justify-end mt-2">
-            <button className="bg-[#ff7043] text-white py-3.5 px-10 rounded-full font-bold text-sm flex items-center gap-2 shadow-md hover:brightness-110 active:scale-95 transition-all">
+            <button 
+              onClick={handleBooking}
+              className="bg-[#ff7043] text-white py-3.5 px-10 rounded-full font-bold text-sm flex items-center gap-2 shadow-md hover:brightness-110 active:scale-95 transition-all"
+            >
               Fill your Information <ArrowRight size={18} />
             </button>
           </div>

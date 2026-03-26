@@ -4,11 +4,11 @@ import Navbar from './component/Navbar';
 import Footer from './component/Footer';
 import Home from './page/Home';
 import BookingForm from './page/BookingForm'; 
+import Reservation from './page/reservation';
 
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen bg-[#f9fafb]">
         <Navbar />
         
         {/* Main content area: flex-grow ensures footer stays at bottom */}
@@ -16,11 +16,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/book" element={<BookingForm />} />
+            <Route path="/reservation" element={<Reservation/>} />
           </Routes>
         </main>
 
         <Footer />
-      </div>
     </Router>
   );
 }
