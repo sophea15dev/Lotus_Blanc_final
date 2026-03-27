@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useNavigate } from 'react-router-dom'; // 1. Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import { Users, Calendar, Clock, Sparkles, MessageSquare, ArrowRight, ChevronDown } from 'lucide-react';
 
 const BookingForm: React.FC = () => {
-  const navigate = useNavigate(); // 2. Initialize navigate
+  const navigate = useNavigate();
+
+  // Mock data for dates that are already full (e.g., fetched from your API)
+  const fullyBookedDates = [
+    new Date(2026, 2, 28), // Example: March 28, 2026 is full
+    new Date(2026, 3, 1),  // Example: April 1, 2026 is full
+  ];
 
   // Form States
   const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [adults, setAdults] = useState("0");
+  const [adults, setAdults] = useState("1"); // Default to 1 member
   const [children, setChildren] = useState("0");
   const [time, setTime] = useState("7:30 AM");
   const [occasion, setOccasion] = useState("Occasion");
   const [note, setNote] = useState("");
 
   const handleBooking = () => {
-    // 3. Create the data object to send
     const bookingData = {
       bookingId: "BK-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
       adults,
@@ -26,8 +31,6 @@ const BookingForm: React.FC = () => {
       occasion,
       note
     };
-
-    // 4. Navigate to the confirmation route and pass the data
     navigate('/reservation', { state: bookingData });
   };
 
@@ -50,18 +53,20 @@ const BookingForm: React.FC = () => {
       {/* RIGHT FORM */}
       <div className="w-full md:w-[60%] px-8 py-10 lg:px-[60px] flex flex-col justify-center">
         <div className="text-center mb-8">
-          <h2 className="text-[32px] font-extrabold text-[#1e3a8a]">BOOK YOUR TABLE</h2>
-          <div className="h-[1px] bg-[#1e3a8a] w-full mt-1"></div>
+          <h2 className="text-[32px] font-extrabold text-black">BOOK YOUR TABLE</h2>
+          <div className="h-[2px] bg-[#ff7043] w-20 mx-auto mt-1"></div>
         </div>
 
         <div className="flex flex-col gap-5">
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label className={labelS}>Adults</label>
+              <label className={labelS}>Adults </label>
               <div className="relative">
                 <Users size={18} className={iconL} />
                 <input 
                   type="number" 
+                  min="1"
+                  placeholder="How many?"
                   className={inputS} 
                   value={adults}
                   onChange={(e) => setAdults(e.target.value)}
@@ -69,11 +74,13 @@ const BookingForm: React.FC = () => {
               </div>
             </div>
             <div className="flex flex-col">
-              <label className={labelS}>Children</label>
+              <label className={labelS}>Children </label>
               <div className="relative">
                 <Users size={18} className={iconL} />
                 <input 
                   type="number" 
+                  min="0"
+                  placeholder="0"
                   className={inputS} 
                   value={children}
                   onChange={(e) => setChildren(e.target.value)}
@@ -91,6 +98,8 @@ const BookingForm: React.FC = () => {
                   selected={startDate}
                   onChange={(date: Date | null) => setStartDate(date)}
                   dateFormat="dd/MM/yy"
+                  minDate={new Date()} // CANNOT CHOOSE YESTERDAY
+                  excludeDates={fullyBookedDates} // CANNOT CLICK BOOKED DATES
                   wrapperClassName="w-full"
                   customInput={<input className={inputS} />}
                 />
@@ -102,19 +111,15 @@ const BookingForm: React.FC = () => {
               <div className="relative">
                 <Clock size={18} className={iconL} />
                 <select className={inputS} value={time} onChange={(e) => setTime(e.target.value)}>
+                  {/* Your time options remain the same */}
                   <option>7:30 AM</option>
                   <option>8:00 AM</option>
                   <option>8:30 AM</option>
-                  <option>9:00 Am</option>
-                  <option>9:30 AM</option>
+                  <option>9:00 AM</option>
                   <option>10:00 AM</option>
-                  <option>10:30 AM</option>
-                  <option>11:00 AM</option> 
-                  <option>11:30 AM</option>
+                  <option>11:00 AM</option>
                   <option>12:00 PM</option>
-                  <option>12:30 PM</option>
                   <option>1:00 PM</option>
-                  <option>1:30 PM</option>
                 </select>
                 <ChevronDown size={14} className={iconR} />
               </div>
@@ -127,6 +132,7 @@ const BookingForm: React.FC = () => {
               <option>Occasion</option>
               <option>Birthday</option>
               <option>Anniversary</option>
+              <option>Business</option>
             </select>
             <ChevronDown size={16} className={iconR} />
           </div>
@@ -134,7 +140,7 @@ const BookingForm: React.FC = () => {
           <div className="relative">
             <MessageSquare size={18} className="absolute left-[14px] top-[15px] text-black z-10" />
             <textarea 
-              placeholder="Instruction" 
+              placeholder="Special instructions (Allergies, seating preference, etc.)" 
               className={`${inputS} h-[100px] resize-none pt-3`} 
               value={note}
               onChange={(e) => setNote(e.target.value)}
@@ -146,7 +152,7 @@ const BookingForm: React.FC = () => {
               onClick={handleBooking}
               className="bg-[#ff7043] text-white py-3.5 px-10 rounded-full font-bold text-sm flex items-center gap-2 shadow-md hover:brightness-110 active:scale-95 transition-all"
             >
-              Fill your Information <ArrowRight size={18} />
+              Confirm Booking <ArrowRight size={18} />
             </button>
           </div>
         </div>

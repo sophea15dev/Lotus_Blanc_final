@@ -19,25 +19,43 @@ import AdminLayout from './admin/layout/layout';
 import ProtectedRoute from './admin/ProtectedRoute';
 
 const App: React.FC = () => {
-  // A simple handler to satisfy the prop requirement
   const handleLoginSuccess = () => {
     console.log("Admin session initialized");
   };
+
+  // Common wrapper class for all user pages to ensure centering
+  const userMainStyles = "flex flex-col items-center justify-center min-h-[calc(100vh-160px)] w-full p-4 bg-gray-50";
 
   return (
     <Router>
       <Routes>
         
         {/* --- USER WEBSITE SECTION --- */}
-        <Route path="/" element={<><Navbar /><main className="p-4"><Home /></main><Footer /></>} />
-        <Route path="/book" element={<><Navbar /><main className="p-4"><BookingForm /></main><Footer /></>} />
-        <Route path="/reservation" element={<><Navbar /><main className="p-4"><Reservation /></main><Footer /></>} />
-        <Route path="/menu" element={<><Navbar /><main className="p-4"><Menu /></main><Footer /></>} />
-        <Route path="/list" element={<><Navbar /><main className="p-4"><List /></main><Footer /></>} />
-        <Route path="/contact" element={<><Navbar /><main className="p-4"><Contact /></main><Footer /></>} />
+        <Route path="/" element={
+          <><Navbar /><main className={userMainStyles}><Home /></main><Footer /></>
+        } />
+        
+        <Route path="/book" element={
+          <><Navbar /><main className={userMainStyles}><BookingForm /></main><Footer /></>
+        } />
+        
+        <Route path="/reservation" element={
+          <><Navbar /><main className={userMainStyles}><Reservation /></main><Footer /></>
+        } />
+        
+        <Route path="/menu" element={
+          <><Navbar /><main className={userMainStyles}><Menu /></main><Footer /></>
+        } />
+        
+        <Route path="/list" element={
+          <><Navbar /><main className={userMainStyles}><List /></main><Footer /></>
+        } />
+        
+        <Route path="/contact" element={
+          <><Navbar /><main className={userMainStyles}><Contact /></main><Footer /></>
+        } />
 
         {/* --- ADMIN LOGIN --- */}
-        {/* Pass the actual function here instead of throwing an error */}
         <Route 
           path="/admin/login" 
           element={<Login onLoginSuccess={handleLoginSuccess} />} 
