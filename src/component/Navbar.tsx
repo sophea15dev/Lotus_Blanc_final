@@ -52,8 +52,8 @@ const Navbar: React.FC = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className={`text-lg font-bold transition-colors duration-300 hover:text-[#FF7043] ${
-                  isActive(link.href) ? 'text-[#FF7043]' : 'text-slate-700'
+                className={`text-lg font-bold transition-colors duration-300 hover:text-blue-500 ${
+                  isActive(link.href) ? 'text-blue-500' : 'text-black'
                 }`}
               >
                 {link.name}
@@ -74,7 +74,7 @@ const Navbar: React.FC = () => {
             {/* Mobile Toggle */}
             <button 
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 text-slate-700 hover:bg-gray-100 rounded-lg transition-colors"
+              className="md:hidden p-2 text-slate-700 hover:bg-orange-100 rounded-lg transition-colors"
               aria-label="Toggle Menu"
             >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -94,7 +94,7 @@ const Navbar: React.FC = () => {
               key={link.name}
               to={link.href}
               className={`w-full text-center py-3 text-lg font-bold rounded-xl ${
-                isActive(link.href) ? 'bg-orange-50 text-[#FF7043]' : 'text-slate-700 hover:bg-gray-50'
+                isActive(link.href) ? 'bg-orange-50 text-[#FF7043]' : 'text-slate-700 hover:bg-orange-50'
               }`}
             >
               {link.name}
