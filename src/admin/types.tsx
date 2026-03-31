@@ -1,6 +1,12 @@
-export type TabType = 'dashboard' | 'menu-management' | 'reservations' | 'staff' | 'settings';
+export type TabType =
+  | "dashboard"
+  | "menu-management"
+  | "reservations"
+  | "staff"
+  | "settings";
 
 export interface MenuItem {
+  isAvailable: any;
   id: number;
   name: string;
   price: number;
@@ -14,5 +20,5 @@ export interface Reservation {
   customer: string;
   time: string;
   guests: number;
-  status: 'Confirmed' | 'Pending' | 'Arrived';
+  status: "Confirmed" | "Pending" | "Arrived";
 }
