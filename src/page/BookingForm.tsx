@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, Calendar, Clock, Sparkles, MessageSquare, 
-  ArrowRight, ChevronDown, AlertCircle, CheckCircle2 
+  ArrowRight, ChevronDown, AlertCircle, CheckCircle2, Phone, User 
 } from 'lucide-react';
 
 const BookingForm: React.FC = () => {
@@ -17,6 +17,8 @@ const BookingForm: React.FC = () => {
 
   // Form States
   const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [adults, setAdults] = useState("1");
   const [children, setChildren] = useState("0");
   const [time, setTime] = useState("7:30 AM");
@@ -27,10 +29,20 @@ const BookingForm: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
 
   const handleBooking = async () => {
-    if (!agreedToPolicy) return;
+    if (!agreedToPolicy) {
+      setMessage('Please agree to the cancellation policy before booking.');
+      return;
+    }
+
+    if (!name.trim() || !phone.trim() || !adults.trim() || !children.trim() || !time.trim() || !occasion.trim() || !startDate) {
+      setMessage('Please complete all required fields before booking.');
+      return;
+    }
 
     const bookingData = {
       bookingId: "BK-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+      name,
+      phone,
       adults,
       children,
       date: startDate ? startDate.toLocaleDateString('en-GB') : "",
@@ -95,6 +107,38 @@ const BookingForm: React.FC = () => {
         </div>
 
         <div className="flex flex-col gap-4">
+          {/* NAME & PHONE */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col">
+              <label className={labelS}>Full Name</label>
+              <div className="relative">
+                <User size={18} className={iconL} />
+                <input 
+                  type="text" 
+                  placeholder="John Doe" 
+                  required
+                  className={inputS} 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} 
+                />
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <label className={labelS}>Phone Number</label>
+              <div className="relative">
+                <Phone size={18} className={iconL} />
+                <input 
+                  type="tel" 
+                  placeholder="+1 (555) 123-4567" 
+                  required
+                  className={inputS} 
+                  value={phone} 
+                  onChange={(e) => setPhone(e.target.value)} 
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label className={labelS}>Adults</label>
@@ -199,9 +243,9 @@ const BookingForm: React.FC = () => {
           <div className="flex justify-end">
             <button 
               onClick={handleBooking}
-              disabled={!agreedToPolicy || isSubmitting}
+              disabled={!name.trim() || !phone.trim() || !adults.trim() || !children.trim() || !time.trim() || !occasion.trim() || !startDate || !agreedToPolicy || isSubmitting}
               className={`py-3.5 px-10 rounded-full font-bold text-sm flex items-center gap-2 shadow-md transition-all
-                ${agreedToPolicy && !isSubmitting
+                ${name.trim() && phone.trim() && adults.trim() && children.trim() && time.trim() && occasion.trim() && startDate && agreedToPolicy && !isSubmitting
                   ? "bg-[#ff7043] text-white hover:brightness-110 active:scale-95" 
                   : "bg-gray-300 text-gray-500 cursor-not-allowed opacity-70"
                 }`}

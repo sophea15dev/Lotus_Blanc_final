@@ -26,7 +26,49 @@ export default defineConfig({
                 };
                 res.statusCode = 201;
                 res.end(JSON.stringify(mockResult));
-              } catch (err) {
+              } catch {
+                res.statusCode = 400;
+                res.end(JSON.stringify({ error: 'Invalid JSON' }));
+              }
+            });
+            return;
+          }
+
+          if (req.url?.startsWith('/api/auth/login') && req.method === 'POST') {
+            let body = '';
+            req.on('data', (chunk) => { body += chunk; });
+            req.on('end', () => {
+              console.log('[mock] /api/auth/login body:', body);
+              res.setHeader('Content-Type', 'application/json');
+              try {
+                const payload = JSON.parse(body || '{}');
+                const { email, password } = payload;
+                const normalizedEmail = String(email || '').trim().toLowerCase();
+                const normalizedPassword = String(password || '');
+                console.log('[mock] /api/auth/login credentials:', { normalizedEmail, normalizedPassword });
+
+                if (
+                  normalizedEmail === 'lotusblanc@email.com' && normalizedPassword === '123456' ||
+                  normalizedEmail === 'admin@lotus.com' && normalizedPassword === '123456' ||
+                  normalizedEmail.includes('admin') && normalizedPassword.length > 0
+                ) {
+                  res.statusCode = 200;
+                  res.end(JSON.stringify({
+                    token: 'mock-admin-token',
+                    user: { email: normalizedEmail || 'admin', role: 'admin' },
+                    message: 'Login successful',
+                  }));
+                } else {
+                  // dev fallback; no more hard 401 for local testing
+                  res.statusCode = 200;
+                  res.end(JSON.stringify({
+                    token: 'mock-admin-token',
+                    user: { email: normalizedEmail || 'admin', role: 'admin' },
+                    message: 'Login successful (dev fallback)',
+                  }));
+                }
+              } catch (error) {
+                console.error('[mock] /api/auth/login invalid JSON', error);
                 res.statusCode = 400;
                 res.end(JSON.stringify({ error: 'Invalid JSON' }));
               }

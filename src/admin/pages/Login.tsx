@@ -13,22 +13,38 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
     setIsLoading(true);
 
-    setTimeout(() => {
-      // Credentials based on your request
-      if (email === 'lotusblanc@email.com' && password === '123456') {
-        localStorage.setItem('isLoggedIn', 'true');
-        onLoginSuccess(); // Triggers the parent function
-        navigate('/admin/dashboard');
-      } else {
-        alert('Invalid Admin Credentials');
-        setIsLoading(false);
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        type ErrorResponse = { message?: string };
+        const errorData = await response.json().catch(() => ({} as ErrorResponse));
+        const msg = errorData.message || `HTTP ${response.status}`;
+        throw new Error(msg);
       }
-    }, 1000);
+
+      const data = await response.json();
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('authToken', data.token || 'mock-token');
+      onLoginSuccess();
+      navigate('/admin/dashboard');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Login failed. Please try again.';
+      setErrorMessage(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -85,6 +101,11 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                 </button>
               </div>
             </div>
+
+            {/* Error message */}
+            {errorMessage && (
+              <p className="text-sm text-red-600 font-semibold text-center">{errorMessage}</p>
+            )}
 
             {/* SUBMIT BUTTON */}
             <button 
