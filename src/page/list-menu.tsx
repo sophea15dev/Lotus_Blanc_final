@@ -216,6 +216,8 @@ export default function MenuPage() {
           </div>
         ))}
 
+        
+
       {/* --- FLOATING PRE-ORDER BAR --- */}
       {cart.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-blue-600 text-white px-6 py-4 rounded-2xl shadow-2xl flex justify-between items-center z-40 animate-in fade-in slide-in-from-bottom-4 duration-300">
