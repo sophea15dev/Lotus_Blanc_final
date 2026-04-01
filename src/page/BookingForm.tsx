@@ -10,7 +10,6 @@ import {
 const BookingForm: React.FC = () => {
   const navigate = useNavigate();
 
-  // Mock fully booked dates
   const fullyBookedDates = [
     new Date(2026, 2, 28),
     new Date(2026, 3, 1),
@@ -23,10 +22,12 @@ const BookingForm: React.FC = () => {
   const [time, setTime] = useState("7:30 AM");
   const [occasion, setOccasion] = useState("Occasion");
   const [note, setNote] = useState("");
-  const [agreedToPolicy, setAgreedToPolicy] = useState(false); // New State
+  const [agreedToPolicy, setAgreedToPolicy] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
-  const handleBooking = () => {
-    if (!agreedToPolicy) return; // Prevent booking if not agreed
+  const handleBooking = async () => {
+    if (!agreedToPolicy) return;
 
     const bookingData = {
       bookingId: "BK-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
@@ -37,7 +38,37 @@ const BookingForm: React.FC = () => {
       occasion,
       note
     };
-    navigate('/reservation', { state: bookingData });
+
+    setIsSubmitting(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch('/api/reservations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookingData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || `HTTP ${response.status}`);
+      }
+
+      setMessage('Reservation created successfully!');
+
+      // Short delay so the user sees the success state before redirecting
+      setTimeout(() => {
+        navigate('/reservation', { state: { ...bookingData, ...result } });
+      }, 1500);
+
+    } catch (error) {
+      console.error('Reservation failed:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      setMessage(`Reservation failed: ${errorMessage}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const labelS = "text-[11px] text-[#94a3b8] font-bold uppercase mb-1.5 ml-1";
@@ -46,7 +77,7 @@ const BookingForm: React.FC = () => {
   const iconR = "absolute right-[14px] top-1/2 -translate-y-1/2 text-[#ff7043] pointer-events-none";
 
   return (
-    <div className="flex bg-white rounded-[24px] w-full max-w-[1050px] min-h-[600px] overflow-hidden shadow-2xl">
+    <div className="flex bg-white rounded-[24px] w-full max-w-[1050px] min-h-[600px] overflow-hidden shadow-2xl mx-auto my-10">
       {/* LEFT IMAGE */}
       <div className="hidden md:block md:w-[40%] p-5">
         <img 
@@ -64,7 +95,6 @@ const BookingForm: React.FC = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          {/* Members Input */}
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label className={labelS}>Adults</label>
@@ -82,7 +112,6 @@ const BookingForm: React.FC = () => {
             </div>
           </div>
 
-          {/* Date & Time */}
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label className={labelS}>Date</label>
@@ -90,7 +119,7 @@ const BookingForm: React.FC = () => {
                 <Calendar size={18} className={iconL} />
                 <DatePicker
                   selected={startDate}
-                  onChange={(date: React.SetStateAction<Date | null>) => setStartDate(date)}
+                  onChange={(date: Date | null) => setStartDate(date)}
                   dateFormat="dd/MM/yy"
                   minDate={new Date()}
                   excludeDates={fullyBookedDates}
@@ -114,13 +143,12 @@ const BookingForm: React.FC = () => {
             </div>
           </div>
 
-          {/* Occasion & Notes */}
           <div className="relative">
             <Sparkles size={18} className={iconL} />
             <select className={inputS} value={occasion} onChange={(e) => setOccasion(e.target.value)}>
-              <option>Occasion</option>
-              <option>Birthday</option>
-              <option>Anniversary</option>
+              <option value="Occasion">Occasion</option>
+              <option value="Birthday">Birthday</option>
+              <option value="Anniversary">Anniversary</option>
             </select>
             <ChevronDown size={16} className={iconR} />
           </div>
@@ -135,7 +163,6 @@ const BookingForm: React.FC = () => {
             />
           </div>
 
-          {/* CANCELLATION POLICY SECTION */}
           <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mt-2">
             <div className="flex items-start gap-3">
               <AlertCircle size={20} className="text-[#ff7043] shrink-0 mt-0.5" />
@@ -143,22 +170,19 @@ const BookingForm: React.FC = () => {
                 <h4 className="text-[13px] font-bold text-orange-900 uppercase">Cancellation Policy</h4>
                 <p className="text-[12px] text-orange-800 leading-relaxed">
                   Cancellations must be made at least **2 days** before your scheduled time. 
-                  Late cancellations may affect future bookings.
                 </p>
               </div>
             </div>
             
             <label className="flex items-center gap-3 mt-3 cursor-pointer group">
-              <div className="relative">
-                <input 
-                  type="checkbox" 
-                  className="peer hidden" 
-                  checked={agreedToPolicy}
-                  onChange={() => setAgreedToPolicy(!agreedToPolicy)}
-                />
-                <div className="w-5 h-5 border-2 border-[#ff7043] rounded-md flex items-center justify-center peer-checked:bg-[#ff7043] transition-colors">
-                  {agreedToPolicy && <CheckCircle2 size={14} className="text-white" />}
-                </div>
+              <input 
+                type="checkbox" 
+                className="hidden" 
+                checked={agreedToPolicy}
+                onChange={() => setAgreedToPolicy(!agreedToPolicy)}
+              />
+              <div className={`w-5 h-5 border-2 border-[#ff7043] rounded-md flex items-center justify-center transition-colors ${agreedToPolicy ? 'bg-[#ff7043]' : 'bg-white'}`}>
+                {agreedToPolicy && <CheckCircle2 size={14} className="text-white" />}
               </div>
               <span className="text-[12px] font-medium text-gray-700 group-hover:text-black">
                 I understand and agree to the policy.
@@ -166,17 +190,23 @@ const BookingForm: React.FC = () => {
             </label>
           </div>
 
+          {message && (
+            <p className={`mt-3 text-sm font-bold ${message.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
+              {message}
+            </p>
+          )}
+
           <div className="flex justify-end">
             <button 
               onClick={handleBooking}
-              disabled={!agreedToPolicy}
+              disabled={!agreedToPolicy || isSubmitting}
               className={`py-3.5 px-10 rounded-full font-bold text-sm flex items-center gap-2 shadow-md transition-all
-                ${agreedToPolicy 
+                ${agreedToPolicy && !isSubmitting
                   ? "bg-[#ff7043] text-white hover:brightness-110 active:scale-95" 
                   : "bg-gray-300 text-gray-500 cursor-not-allowed opacity-70"
                 }`}
             >
-              Confirm Booking <ArrowRight size={18} />
+              {isSubmitting ? 'Booking...' : 'Confirm Booking'} <ArrowRight size={18} />
             </button>
           </div>
         </div>
