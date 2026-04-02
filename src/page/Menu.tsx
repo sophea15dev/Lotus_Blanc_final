@@ -34,7 +34,7 @@ const Menu: React.FC = () => {
     { id: 12, category: "Menu This Week", name: "Penne ", desc: "Pasta tossed with mixed seafood in a rich tomato cream sauce...", price: 6.00, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpVriPhJdWEJtNkZAkqXFB8dKTvKWnPsUbYw&s" },  
     { id: 13, category: "Menu This Week", name: "Spaghetti", desc: "Pasta tossed with mixed seafood in a rich tomato cream sauce...", price: 6.00, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-_EkHM9MGpcc1u9tEtbOObnNDtTozT5WiLg&s" },
     { id: 14, category: "Menu This Week", name: "Creamy Seafood Marinara Pasta  ", desc: "Pasta tossed with mixed seafood in a rich tomato cream sauce...", price: 6.00, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD9LmW8BmRTaVOJGhtiTYVD_CoLbOYtpqs2A&s" },
-    { id: 15, category: "Menu This Week", name: "Classic Carbonara រ ", desc: "Creamy pasta with bacon, parmesan cheese, and egg...", price: 6.00, image: "https://www.marthastewart.com/thmb/S9xVtnWSHldvxPHKOxEq0bALG-k=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/MSL-338686-spaghetti-carbonara-hero-3x2-69999-560b45d1dd9f4741b717176eff024839.jpeg" },
+    { id: 15, category: "Menu This Week", name: "Classic Carbonara ", desc: "Creamy pasta with bacon, parmesan cheese, and egg...", price: 6.00, image: "https://www.marthastewart.com/thmb/S9xVtnWSHldvxPHKOxEq0bALG-k=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/MSL-338686-spaghetti-carbonara-hero-3x2-69999-560b45d1dd9f4741b717176eff024839.jpeg" },
    
     //Main Courses
 
@@ -133,34 +133,42 @@ const Menu: React.FC = () => {
     <div className="min-h-screen w-full bg-white text-slate-900 font-sans selection:bg-orange-100">
     
 
-      {/* CATEGORY NAV */}
-      <nav className="sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-50 mb-8 font-['Work_Sans']">
-        <div className="max-w-xl mx-auto px-6 py-4 flex gap-8 overflow-x-auto no-scrollbar">
-          {categories.map(cat => (
-            <a key={cat} href={`#${cat}`} className="text-[12px] font-black uppercase tracking-widest text-slate-400 hover:text-orange-600 transition-colors whitespace-nowrap">
-              {cat}
-            </a>
-          ))}
-        </div>
-      </nav>
+      
+<nav className="sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-50 mb-8 font-['Work_Sans']">
+  <div className="max-w-7xl mx-auto px-9 py-9"> 
+    <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4">
+      {categories.map(cat => (
+        <a 
+          key={cat} 
+          href={`#${cat}`} 
+          className="text-[12px] font-black uppercase tracking-[0.15em] text-slate-500 hover:text-orange-600 transition-all duration-300 relative group whitespace-nowrap"
+        >
+          {cat}
+          {/* Optional: Animated underline for extra polish */}
+          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
+        </a>
+      ))}
+    </div>
+  </div>
+</nav>
 
       {/* MENU CONTENT */}
-      <main className="max-w-5xl mx-auto px-6 pb-30">
+      <main className="max-w-6xl mx-auto px-8 pb-30">
         {categories.map((catName) => (
-          <section key={catName} id={catName} className="mb-19 scroll-mt-24">
-            <h2 className="text-xl font-black uppercase tracking-tight mb-8 text-slate-500 font-['Work_Sans']">{catName}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-17">
+          <section key={catName} id={catName} className="mb-19 scroll-mt-30">
+            <h2 className="text-xl font-black uppercase tracking-tight mb-8 text-blue-600  font-['Work_Sans']">{catName}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-19 bg">
               {fullMenu.filter(item => item.category === catName).map((dish) => (
-                <div key={dish.id} className="flex items-start gap-6 group cursor-pointer" onClick={() => addToCart(dish)}>
-                  <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-2xl ">
+                <div key={dish.id} className="flex items-start gap-10 group cursor-pointer bg-gray-50 rounded-2xl p-3 shadow hover:shadow-lg" onClick={() => addToCart(dish)}>
+                  <div className="relative w-30 h-30 shrink-0 overflow-hidden rounded-2xl">
                     <img src={dish.image} className="w-full h-full object-cover " alt="" />
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-3">
                     <h3 className="font-bold text-lg font-['Work_Sans'] ">{dish.name}</h3>
-                    <p className="text-slate-500 text-xs mt-1 line-clamp-2 leading-relaxed font-['Work_Sans']">{dish.desc}</p>
-                    <div className="mt-3 flex items-center justify-between">
+                    <p className="text-slate-500 text-xs mt-4 line-clamp-2 leading-relaxed font-['Work_Sans']">{dish.desc}</p>
+                    <div className="mt-5 flex items-center gap-50">
                        <span className="font-black text-orange-600 font-['Work_Sans']">${dish.price.toFixed(2)}</span>
-                       <span className="text-[15px] font-black text-orange-600 uppercase tracking-widest font-['Work_Sans']">+  Add</span>
+                       <span className="text-[15px] font-black text-white bg-orange-600  text-center w-20  rounded-2xl transition-colors font-['Work_Sans']">+  Add</span>
                     </div>
                   </div>
                 </div>
