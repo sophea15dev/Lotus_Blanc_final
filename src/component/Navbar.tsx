@@ -29,18 +29,18 @@ const Navbar: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="relative z-[100] bg-white border-b border-gray-100 font-['Work_Sans']">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+    <nav className="relative z-[200]  bg-white border-b border-gray-100 font-['Work_Sans'] shadow-xl">
+      <div className="max-w-9xl mx-auto px-5 sm:px-8 lg:px-19">
         <div className="flex justify-between items-center h-20">
           
           {/* LEFT: Logo & Brand */}
           <Link to="/" className="flex items-center gap-3 shrink-0 group">
             <img src={logo} alt="Lotus Logo" className="h-12 w-auto transition-transform group-hover:scale-105" />
             <div className="flex flex-col">
-              <span className="text-2xl font-black italic text-slate-800 leading-none">
+              <span className="text-2xl font-black italic text-[#024a6c] leading-none">
                 Lotus Blanc
               </span>
-              <span className="text-[9px] tracking-[3px] text-blue-500 font-bold mt-1">
+              <span className="text-[9px] tracking-[3px] text-[#024a6c] font-bold mt-1">
                 FINE DINING & BAKERY
               </span>
             </div>
@@ -52,8 +52,8 @@ const Navbar: React.FC = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className={`text-lg font-bold transition-colors duration-300 hover:text-blue-500 ${
-                  isActive(link.href) ? 'text-blue-500' : 'text-black'
+                className={`text-lg font-bold transition-colors duration-300 hover:text-[#FF7043] ${
+                  isActive(link.href) ? 'text-[#FF7043]' : 'text-[#024a6c]'
                 }`}
               >
                 {link.name}

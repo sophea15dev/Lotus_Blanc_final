@@ -47,14 +47,14 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         {/* LEFT SIDE - BRANDING */}
         <div className="hidden md:flex w-1/2 bg-[#034A6C] relative items-center justify-center p-12 overflow-hidden">
           <img 
-            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1000" 
+            src="https://scontent.fpnh10-1.fna.fbcdn.net/v/t39.30808-6/470212758_1008778511055159_7319525854756683997_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=47Q42A9l0hEQ7kNvwHmQ8oJ&_nc_oc=AdqQDmmx6f4FbC69Acaox_PYGYpwptCh5a-C5z3xhAM-HXd8KnJPXn5QuAqDIe_GGQ8&_nc_zt=23&_nc_ht=scontent.fpnh10-1.fna&_nc_gid=OJ1IEYVRf7ygAXXa-ZAcSQ&_nc_ss=7a389&oh=00_Af1QMgTTTlmBw35iURbg3WJWTh6HVqTrIiJj6KpTgU9HHQ&oe=69D4F915" 
             alt="Restaurant" 
             className="absolute inset-0 w-full h-full object-cover opacity-40" 
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#034A6C] to-transparent opacity-70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#034b6cb0] to-transparent opacity-70" />
           
           <div className="relative z-10 w-full">
-            <h2 className="text-5xl font-black text-white italic leading-tight mb-4 tracking-tighter">
+            <h2 className="text-5xl font-black text-white italic leading-tight mb-4 tracking-tighter font-['Work_Sans']">
               Lotus Blanc <br /> Restaurant.
             </h2>
             <div className="h-1.5 w-20 bg-[#FF6E31] rounded-full" />
@@ -63,11 +63,11 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
         {/* RIGHT SIDE - FORM */}
         <div className="w-full md:w-1/2 p-8 lg:p-16 flex flex-col justify-center bg-white">
-          <h1 className="text-4xl font-black text-slate-800 text-center mb-10 tracking-tight">Login</h1>
+          <h1 className="text-4xl font-black text-[#024a6c] font-['Work_Sans'] text-center mb-10 tracking-tight">Login</h1>
           
           <form onSubmit={handleLogin} className="space-y-7">
             <div className="space-y-1">
-              <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Email</label>
+              <label className="text-[10px] font-black uppercase  text-slate-400  font-['Work_Sans'] tracking-widest ml-1">Email</label>
               <div className="relative border-b-2 border-slate-100 focus-within:border-[#034A6C] transition-all">
                 <Mail className="absolute left-1 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                 <input 
@@ -81,7 +81,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Password</label>
+              <label className="text-[10px] font-black uppercase text-slate-400 font-['Work_Sans'] tracking-widest ml-1">Password</label>
               <div className="relative border-b-2 border-slate-100 focus-within:border-[#034A6C] transition-all">
                 <Lock className="absolute left-1 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                 <input 
@@ -112,7 +112,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             <button 
               type="submit" 
               disabled={isLoading} 
-              className="w-full py-5 bg-[#FF6E31] hover:bg-[#ff5714] text-white font-black rounded-2xl shadow-xl transition-all uppercase tracking-widest text-[11px] flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50"
+              className="w-full py-5 bg-[#FF6E31] hover:bg-[#ff5714] text-white font-black rounded-2xl shadow-xl transition-all uppercase tracking-widest text-[11px] flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50 font-['Work_Sans']"
             >
               {isLoading ? "Validating..." : "Login to Dashboard"} <ArrowRight size={18} />
             </button>

@@ -93,7 +93,7 @@ const BookingForm: React.FC = () => {
       {/* LEFT IMAGE */}
       <div className="hidden md:block md:w-[40%] p-5">
         <img 
-          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" 
+          src="https://scontent.fpnh10-1.fna.fbcdn.net/v/t39.30808-6/509430048_9744337612342325_2532546079078455949_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=7b2446&_nc_ohc=-4fVARSpxkMQ7kNvwHflHkZ&_nc_oc=Adp5u4MJqIWWvjltJKBENxAjN0rHuWWZ9VrctulgD0seiYnT5ZxjKKSA0pGaWriaGg0&_nc_zt=23&_nc_ht=scontent.fpnh10-1.fna&_nc_gid=DclW3NOuwTWzhfb0FJqbEg&_nc_ss=7a389&oh=00_Af2IA1C1JozIGKf3NsSPl7GUSGzCfpmRigp0HPOzvbdkRA&oe=69D4BD1C" 
           className="w-full h-full object-cover rounded-[18px]" 
           alt="Restaurant"
         />
@@ -102,7 +102,7 @@ const BookingForm: React.FC = () => {
       {/* RIGHT FORM */}
       <div className="w-full md:w-[60%] px-8 py-10 lg:px-[60px] flex flex-col justify-center">
         <div className="text-center mb-6">
-          <h2 className="text-[32px] font-extrabold text-black">BOOK YOUR TABLE</h2>
+          <h2 className="text-[32px] font-extrabold text-[#024a6c]">BOOK YOUR TABLE</h2>
           <div className="h-[2px] bg-[#ff7043] w-20 mx-auto mt-1"></div>
         </div>
 
