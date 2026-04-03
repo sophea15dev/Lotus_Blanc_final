@@ -134,7 +134,7 @@ const Menu: React.FC = () => {
     
 
       
-<nav className="sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-50 mb-8 font-['Work_Sans']">
+<nav className="sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-50 mb-8 ">
   <div className="max-w-7xl mx-auto px-9 py-9"> 
     <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4">
       {categories.map(cat => (
@@ -156,7 +156,7 @@ const Menu: React.FC = () => {
       <main className="max-w-6xl mx-auto px-8 pb-30">
         {categories.map((catName) => (
           <section key={catName} id={catName} className="mb-19 scroll-mt-30">
-            <h2 className="text-xl font-black uppercase tracking-tight mb-8 text-[#024a6c]  font-['Work_Sans']">{catName}</h2>
+            <h2 className="text-xl font-black uppercase tracking-tight mb-8 text-[#024a6c]  ">{catName}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-19 bg">
               {fullMenu.filter(item => item.category === catName).map((dish) => (
                 <div key={dish.id} className="flex items-start gap-10 group cursor-pointer bg-gray-50 rounded-2xl p-3 shadow hover:shadow-lg" onClick={() => addToCart(dish)}>
@@ -164,11 +164,11 @@ const Menu: React.FC = () => {
                     <img src={dish.image} className="w-full h-full object-cover " alt="" />
                   </div>
                   <div className="flex-3">
-                    <h3 className="font-bold text-lg font-['Work_Sans'] ">{dish.name}</h3>
-                    <p className="text-slate-500 text-[17px] mt-3 line-clamp-2 leading-relaxed font-['Work_Sans']">{dish.desc}</p>
+                    <h3 className="font-bold text-lg ">{dish.name}</h3>
+                    <p className="text-slate-500 text-[17px] mt-3 line-clamp-2 leading-relaxed ">{dish.desc}</p>
                     <div className="mt-5 flex items-center gap-40">
-                       <span className="font-black text-orange-600 font-['Work_Sans'] text-[20px]">${dish.price.toFixed(2)}</span>
-                       <span className="text-[15px] font-black text-white bg-orange-600  text-center w-20  rounded-2xl transition-colors font-['Work_Sans']">+  Add</span>
+                       <span className="font-black text-orange-600  text-[20px]">${dish.price.toFixed(2)}</span>
+                       <span className="text-[15px] font-black text-white bg-orange-600  text-center w-20  rounded-2xl transition-colors ">+  Add</span>
                     </div>
                   </div>
                 </div>

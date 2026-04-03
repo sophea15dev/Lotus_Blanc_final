@@ -55,7 +55,7 @@ const Home: React.FC = () => {
           backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://www.pse.ngo/sites/default/files/2025-07/SOH%20SKILLS.jpg")' 
         }}
       >
-        <h1 className="reveal opacity-0 translate-y-10 transition-all duration-1000 text-[50px] font-bold text-white text-center px-4 font-['Work_Sans']">
+        <h1 className="reveal opacity-0 translate-y-10 transition-all duration-1000 text-[50px] font-bold text-white text-center px-4 ">
           Welcome to Lotus Blanc
         </h1>      
       </header>
@@ -63,22 +63,22 @@ const Home: React.FC = () => {
       {/* 2. ABOUT & CONTACT INFO */}
       <section className="reveal opacity-0 translate-y-10 transition-all duration-1000 py-[100px] px-[40px] max-w-[1200px] mx-auto flex flex-col md:flex-row gap-[60px]">       
         <div className="flex-1">
-          <h2 className="text-[#FF7043] text-[24px] mb-[20px] font-semibold font-['Work_Sans']">About Lotus Blanc</h2>
-          <p className="leading-[1.8] text-[#024a6c] font-['Work_Sans']">
+          <h2 className="text-[#FF7043] text-[24px] mb-[20px] font-semibold ">About Lotus Blanc</h2>
+          <p className="leading-[1.8] text-[#024a6c] ">
             Lotus Blanc is a training restaurant dedicated to providing professional hospitality 
             training for Cambodian youth. Our students provide fine dining service under expert supervision.
           </p>
         </div>
         <div className="flex-1 flex flex-col gap-[15px] text-[#024a6c]">
-          <div className="flex gap-[9px] items-start font-['Work_Sans']">
+          <div className="flex gap-[9px] items-start ">
             <MapPin className="text-[#FF7043] shrink-0" /> 
             <span>#420, Tchecoslovaquie Blvd (St. 163), Phnom Penh</span>
           </div>
-          <div className="flex gap-[9px] items-center font-['Work_Sans']">
+          <div className="flex gap-[9px] items-center ">
             <Phone className="text-[#FF7043] shrink-0" /> 
             <span>+855 (0) 23 995 651</span>
           </div>
-          <div className="flex gap-[9px] items-center font-['Work_Sans']">
+          <div className="flex gap-[9px] items-center ">
             <Mail className="text-[#FF7043] shrink-0" /> 
             <span>booking@pse.ngo</span>
           </div>
@@ -87,7 +87,7 @@ const Home: React.FC = () => {
 
       {/* 3. GALLERY SECTION */}
       <section className="py-[20px] px-[20px] bg-[#fdfdfd] text-center">
-        <h2 className="text-[32px] font-['Work_Sans'] font-bold mb-[40px] text-[#024a6c] underline underline-offset-[10px] decoration-1">
+        <h2 className="text-[32px]  font-bold mb-[40px] text-[#024a6c] underline underline-offset-[10px] decoration-1">
           Gallery
         </h2>
 
@@ -110,7 +110,7 @@ const Home: React.FC = () => {
 
       {/* 4. DIRECTION SECTION */}
       <section className="py-[8px] px-[20px] text-center bg-white mb-20">
-        <h2 className="reveal opacity-0 translate-y-10 transition-all duration-700 text-[32px] mb-[40px] text-[#024a6c] font-bold underline underline-offset-[8px] decoration-1 font-['Work_Sans']">
+        <h2 className="reveal opacity-0 translate-y-10 transition-all duration-700 text-[32px] mb-[40px] text-[#024a6c] font-bold underline underline-offset-[8px] decoration-1 ">
           Direction
         </h2>
         
