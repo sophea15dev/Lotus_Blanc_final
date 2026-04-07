@@ -1,16 +1,18 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
-  withCredentials: true, 
+  baseURL: "http://localhost:8000",     // ← Remove the /api from here
+  timeout: 15000,
   headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
+  withCredentials: false,               // Set to true only if you use cookies/sessions
 });
 
+// Request interceptor for auth token
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem("authToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="relative z-[200]  bg-white border-b border-gray-100 font-['Work_Sans'] shadow-xl">
+    <nav className="relative z-[200]  bg-white border-b border-gray-100  shadow-xl">
       <div className="max-w-9xl mx-auto px-5 sm:px-8 lg:px-19">
         <div className="flex justify-between items-center h-20">
           
