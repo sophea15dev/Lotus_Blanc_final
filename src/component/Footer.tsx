@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
       
       {/* Bottom Copyright */}
       <div className="mt-16 pt-8 border-t border-white/10 text-center text-xs opacity-50 tracking-widest">
-        © 2026 LOTUS BLANC TRAINING RESTAURANT | POWERED BY PSE
+        © 2026 LOTUS BLANC TRAINING RESTAURANT | POWERED BY Stack-Builder
       </div>
     </footer>
   );

@@ -9,6 +9,8 @@ const BookingConfirmation: React.FC = () => {
   // Retrieve the data passed from the form
   const data = location.state || {
     bookingId: "N/A",
+    name: "N/A",
+    phone: "N/A",
     adults: "0",
     children: "0",
     date: "N/A",
@@ -34,6 +36,8 @@ const BookingConfirmation: React.FC = () => {
             <span className="text-[#ff7043] font-bold text-lg">{data.bookingId}:</span>
           </div>
           <div className="p-6 space-y-4 text-left">
+            <Row label="Name" value={data.name} />
+            <Row label="Phone" value={data.phone} />
             <Row label="Adults" value={data.adults} />
             <Row label="Children" value={data.children} />
             <Row label="Date" value={data.date} />
@@ -44,8 +48,8 @@ const BookingConfirmation: React.FC = () => {
         </div>
 
         <div className="flex gap-4 w-full">
-          <button onClick={() => navigate('/book')} className="flex-1 bg-[#ff7043] text-white py-3.5 rounded-xl font-bold">Cancel Booking</button>
-          <button className="flex-1 bg-[#084c61] text-white py-3.5 rounded-xl font-bold">Change Booking</button>
+          <button disabled className="flex-1 bg-orange-500 text-white py-3.5 rounded-xl font-bold cursor-not-allowed opacity-80"> Waiting for Confirmation</button>
+          <button onClick={() => navigate('/')} className="flex-1 bg-blue-500 text-white py-3.5 rounded-xl font-bold hover:bg-blue-600">Return Home</button>
         </div>
       </div>
     </div>

@@ -1,13 +1,17 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  // Check if the admin is logged in
-  const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
+const ProtectedRoute = ({
+  children,
+  isAuthenticated,
+}: {
+  children: React.ReactNode;
+  isAuthenticated: boolean;
+}) => {
+  const location = useLocation();
 
   if (!isAuthenticated) {
-    // If not logged in, redirect to the specific admin login path
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;
