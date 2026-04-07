@@ -59,9 +59,9 @@ const Menu: React.FC = () => {
 
     // DESSERTS
     { id: 19, category: "Desserts", name: "Strawberry Mousse", desc: "នំស្រ្តប័ររីម៉ូស", price: 3.00, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoypOB98hHKG5px0dK-J2WKzZCCCsGQopTWA&s" },
-    { id: 20, category: "Desserts", name: "Crispy Meringue ", desc: "នំមឺរេងជាមួយសូសស្វាយ(", price: 3.00, image: "https://justamumnz.com/wp-content/uploads/2022/01/Chewy-Meringues-27.jpg" },
+    { id: 20, category: "Desserts", name: "Crispy Meringue ", desc: "នំមឺរេងជាមួយសូសស្វាយ", price: 3.00, image: "https://justamumnz.com/wp-content/uploads/2022/01/Chewy-Meringues-27.jpg" },
     { id: 21, category: "Desserts", name: "Bread Pudding", desc: "នំប្រេដពុឌីង ជាមួយទឹកសូសវ៉ានីឡាក្តៅ", price: 3.00, image: "https://realhousemoms.com/wp-content/uploads/Bread-Pudding-Recipe-with-Vanilla-Caramel-Sauce-RECIPE-CARD.jpg" },
-    { id: 22, category: "Desserts", name: "Seasonal Fresh Fruit Platter", desc: "ផ្លែឈើស្រស់(", price: 2.00, image: "https://catering.soulorigin.com.au/products/seasonal-fruit-platter?srsltid=AfmBOorVWvtLRFEfyFr4a2VuvWxlazsPymtFo4ByM8psTJuyVtVW9yzi" },
+    { id: 22, category: "Desserts", name: "Seasonal Fresh Fruit Platter", desc: "ផ្លែឈើស្រស់(", price: 2.00, image: "https://scontent.fpnh10-1.fna.fbcdn.net/v/t39.30808-6/505408522_9656762411099846_4605277545137618405_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=13d280&_nc_ohc=DXJ--AnZEfkQ7kNvwFNOaYN&_nc_oc=AdoERoa6tJsSfaDzIkwJQP7RWwmf3PzwF2iRsZRNbfU9Iw0FSY9eqF4Jq6FyXby4v7o&_nc_zt=23&_nc_ht=scontent.fpnh10-1.fna&_nc_gid=yhDY_tHWsbL5dwAfRo04Tw&_nc_ss=7a389&oh=00_Af00jzOmWPf9lpAgyg7DxaRrvvEecdvh6ZQebQiJDHVWaA&oe=69DA6B7D" },
     { id: 23, category: "Desserts", name: "Homemade Ice-Cream ", desc: " ការ៉េម ", price: 2.50, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRmuIyIXF5v525EjWCwk2Rsavd7Yyt3bUv6Q&s" },
 
     // DRINKS
@@ -124,13 +124,13 @@ const Menu: React.FC = () => {
   };
 
   return (
-    <div className="w-full mx-auto px-1 md:px-5 py-4 bg-slate-50/30 min-h-screen ">
+    <div className="w-full mx-auto md:px-25 px-8 py-4 bg-slate-50/30 min-h-screen  ">
       <AnimatePresence mode="wait">
         {!isSubmitted ? (
-          <motion.div key="menu-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col lg:flex-row gap-8 items-start">
+          <motion.div key="menu-view" initial={{ opacity: 0 }} animate={{ opacity: 2 }} exit={{ opacity: 0 }} className="flex flex-col lg:flex-row gap-8 items-start">
             
             {/* LEFT: MENU SECTION */}
-            <div className={`transition-all duration-500 flex-grow ${cart.length > 0 ? "lg:w-[60%]" : "w-full"}`}>
+            <div className={`transition-all duration-500 grow ${cart.length > 0 ? "lg:w-[60%]" : "w-full"}`}>
               <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-8">
                 
                 {/* CATEGORY FILTER */}
@@ -139,7 +139,7 @@ const Menu: React.FC = () => {
                     <button 
                       key={cat}
                       onClick={() => setActiveCategory(cat)}
-                      className={`px-13 py-4 rounded-full text-[11px] font-black uppercase transition-all whitespace-nowrap ${activeCategory === cat ? 'bg-[#004e70] text-white' : 'bg-white text-slate-700 border border-slate-100 hover:border-blue-300'}`}
+                      className={`px-10 py-4 rounded-full text-[12px] font-black uppercase transition-all whitespace-nowrap ${activeCategory === cat ? 'bg-[#004e70] text-white' : 'bg-white text-slate-700 border border-slate-100 hover:border-blue-300'}`}
                     >
                       {cat}
                     </button>
@@ -160,7 +160,7 @@ const Menu: React.FC = () => {
                           <span className="font-black text-[#004e70] text-lg leading-none">${dish.price.toFixed(2)}</span>
                           <span className="text-slate-300 text-[10px] font-bold">{formatKHR(dish.price)}</span>
                         </div>
-                        <button onClick={() => handleAddToCart(dish)} className="bg-[#004e70] text-white text-[12px] font-black py-2 px-5 rounded-full uppercase hover:bg-[#f26522] transition-all">+ Add</button>
+                        <button onClick={() => handleAddToCart(dish)} className="bg-[#004e70] text-white text-[12px] font-black py-2 px-5 rounded-full uppercase  transition-all">+ Add</button>
                       </div>
                     </div>
                   </motion.div>

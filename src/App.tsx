@@ -40,7 +40,7 @@ const App: React.FC = () => {
 
   // Standardized layout style for all user-facing pages
   const userMainStyles = 
-    "flex flex-col items-center justify-start min-h-[calc(100vh-160px)] w-full p-4 bg-gray-50 pt-24";
+    "flex flex-col items-center justify-start min-h-[calc(100vh-160px)] w-full p-4 bg-gray-50";
 
   return (
     <Router
