@@ -24,13 +24,12 @@ import AdminLayout from "./admin/layout/layout";
 import ProtectedRoute from "./admin/ProtectedRoute";
 
 const App: React.FC = () => {
-  // ✅ ONLY use token (no double logic)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    !!localStorage.getItem("authToken"),
+    !!localStorage.getItem("authToken")
   );
 
   const handleLoginSuccess = () => {
-    localStorage.setItem("authToken", "dummy-token"); // simulate login
+    localStorage.setItem("authToken", "dummy-token");
     setIsAuthenticated(true);
   };
 
@@ -39,101 +38,35 @@ const App: React.FC = () => {
     setIsAuthenticated(false);
   };
 
-  const userMainStyles =
-    "flex flex-col items-center justify-center min-h-[calc(100vh-160px)] w-full p-4 bg-gray-50";
+  // Standardized layout style for all user-facing pages
+  const userMainStyles = 
+    "flex flex-col items-center justify-start min-h-[calc(100vh-160px)] w-full p-4 bg-gray-50";
 
   return (
-    <Router>
+    <Router
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <Routes>
-        {/* --- USER WEBSITE --- */}
-        <Route
-          path="/"
-          element={
-            <>
-              <Navbar />
-              <main className={userMainStyles}>
-                <Home />
-              </main>
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/book"
-          element={
-            <>
-              <Navbar />
-              <main className={userMainStyles}>
-                <BookingForm />
-              </main>
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/reservation"
-          element={
-            <>
-              <Navbar />
-              <main className={userMainStyles}>
-                <Reservation />
-              </main>
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/menu"
-          element={
-            <>
-              <Navbar />
-              <main className={userMainStyles}>
-                <Menu />
-              </main>
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/list"
-          element={
-            <>
-              <Navbar />
-              <main className={userMainStyles}>
-                <List />
-              </main>
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/contact"
-          element={
-            <>
-              <Navbar />
-              <main className={userMainStyles}>
-                <Contact />
-              </main>
-              <Footer />
-            </>
-          }
-        />
+        {/* ====================== USER WEBSITE ====================== */}
+        
+        <Route path="/" element={<><Navbar /><main className={userMainStyles}><Home /></main><Footer /></>} />
+        <Route path="/book" element={<><Navbar /><main className={userMainStyles}><BookingForm /></main><Footer /></>} />
+        <Route path="/reservation" element={<><Navbar /><main className={userMainStyles}><Reservation /></main><Footer /></>} />
+        <Route path="/menu" element={<><Navbar /><main className={userMainStyles}><Menu /></main><Footer /></>} />
+        <Route path="/list" element={<><Navbar /><main className={userMainStyles}><List /></main><Footer /></>} />
+        <Route path="/contact" element={<><Navbar /><main className={userMainStyles}><Contact /></main><Footer /></>} />
 
-        {/* --- LOGIN --- */}
-        <Route
-          path="/admin/login"
-          element={
-            isAuthenticated ? (
-              <Navigate to="/admin/dashboard" replace />
-            ) : (
-              <Login onLoginSuccess={handleLoginSuccess} />
-            )
-          }
+        {/* ====================== ADMIN ====================== */}
+        <Route 
+          path="/admin/login" 
+          element={isAuthenticated ? <Navigate to="/admin/dashboard" replace /> : <Login onLoginSuccess={handleLoginSuccess} />} 
         />
-
-        {/* --- PROTECTED ADMIN --- */}
-        <Route
-          path="/admin"
+        
+        <Route 
+          path="/admin" 
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
               <AdminLayout onLogout={handleLogout} />
@@ -146,15 +79,8 @@ const App: React.FC = () => {
           <Route path="reservations" element={<Reservation />} />
         </Route>
 
-        {/* 404 */}
-        <Route
-          path="*"
-          element={
-            <div className="flex h-screen items-center justify-center font-bold">
-              404
-            </div>
-          }
-        />
+        {/* 404 - Not Found */}
+        <Route path="*" element={<div className="flex h-screen items-center justify-center font-bold text-2xl text-gray-600">404 - Page Not Found</div>} />
       </Routes>
     </Router>
   );

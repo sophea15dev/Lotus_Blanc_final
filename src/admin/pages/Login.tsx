@@ -21,26 +21,31 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     setIsLoading(true);
 
     try {
+      // Sending credentials to your backend
       const response = await api.post("/api/auth/login", { email, password });
 
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem(
-        "authToken",
-        response.data.token || response.data.access_token,
-      );
+      // Adjust these keys if your backend returns data differently
+      // (e.g., response.data.accessToken)
+      const token = response.data?.token || response.data?.access_token;
 
-      onLoginSuccess();
-      navigate("/admin/dashboard");
+      if (token) {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("authToken", token);
+
+        onLoginSuccess();
+        navigate("/admin/dashboard");
+      } else {
+        throw new Error("Authentication successful but no token received.");
+      }
     } catch (error: any) {
-      // Logic to prevent "undefined" error messages
-      console.error("Full Error Object:", error);
+      console.error("Login Error:", error);
 
       if (!error.response) {
-        setErrorMessage(
-          "Server Connection Error. Check Backend CORS settings.",
-        );
+        setErrorMessage("Server Connection Error. Check backend and CORS.");
+      } else if (error.response.status === 401) {
+        setErrorMessage("Invalid email or password.");
       } else {
-        setErrorMessage(error.response.data?.message || "Invalid credentials.");
+        setErrorMessage(error.response.data?.message || "Login failed.");
       }
     } finally {
       setIsLoading(false);
@@ -60,7 +65,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           <div className="absolute inset-0 bg-gradient-to-t from-[#034A6C] to-transparent opacity-70" />
 
           <div className="relative z-10 w-full">
-            <h2 className="text-5xl font-black text-white italic leading-tight mb-4 tracking-tighter">
+            <h2 className="text-5xl font-black text-white italic leading-tight mb-4 tracking-tighter font-['Work_Sans']">
               Lotus Blanc <br /> Restaurant.
             </h2>
             <div className="h-1.5 w-20 bg-[#FF6E31] rounded-full" />

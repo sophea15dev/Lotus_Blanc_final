@@ -10,6 +10,7 @@ import {
   Loader2,
   Info,
   MessageSquare,
+  Sparkles,
 } from "lucide-react";
 
 const COUNTRIES = [
@@ -36,6 +37,7 @@ const BookingForm: React.FC = () => {
   const [adults, setAdults] = useState("1");
   const [children, setChildren] = useState("0");
   const [time, setTime] = useState("7:30 AM");
+  const [occasion, setOccasion] = useState<string>("");
   const [note, setNote] = useState("");
   const [agreedToPolicy, setAgreedToPolicy] = useState(false);
 
@@ -254,6 +256,33 @@ const BookingForm: React.FC = () => {
                   <ChevronDown
                     size={14}
                     className="absolute right-3 top-9 text-slate-400"
+                  />
+                </div>
+              </div>
+              {/* OCCASION - ORANGE BORDER UI */}
+              <div className="flex flex-col">
+                <label className={labelS}>Occasion</label>
+                <div className="relative group">
+                  <Sparkles
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                    size={18}
+                  />
+                  <select
+                    className="w-full pl-12 pr-10 py-3.5 bg-white border border-orange-500 rounded-xl text-sm outline-none appearance-none font-medium text-slate-700 cursor-pointer"
+                    value={occasion}
+                    onChange={(e) => setOccasion(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Select an occasion
+                    </option>
+                    <option value="Birthday">Birthday Party</option>
+                    <option value="Anniversary">Anniversary</option>
+                    <option value="Business">Business Meeting</option>
+                    <option value="Dining">Standard Dining</option>
+                  </select>
+                  <ChevronDown
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-orange-500 pointer-events-none"
+                    size={18}
                   />
                 </div>
               </div>

@@ -1,4 +1,11 @@
-export type TabType = 'dashboard' | 'menu-management' | 'reservations' | 'staff' | 'settings';
+import { Key } from "react";
+
+export type TabType =
+  | "dashboard"
+  | "menu-management"
+  | "reservations"
+  | "staff"
+  | "settings";
 
 export interface MenuItem {
   id: number;
@@ -10,9 +17,11 @@ export interface MenuItem {
 }
 
 export interface Reservation {
+  reservation_id: Key | null | undefined;
+  occasion: string;
   id: string;
   customer: string;
   time: string;
   guests: number;
-  status: 'Confirmed' | 'Pending' | 'Arrived';
+  status: "Confirmed" | "Pending" | "Arrived";
 }
