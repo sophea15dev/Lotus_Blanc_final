@@ -36,7 +36,7 @@ const BookingForm: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [adults, setAdults] = useState("1");
   const [children, setChildren] = useState("0");
-  const [time, setTime] = useState("7:30 AM");
+  const [time, setTime] = useState("07:30 ");
   const [occasion, setOccasion] = useState<string>("");
   const [note, setNote] = useState("");
   const [agreedToPolicy, setAgreedToPolicy] = useState(false);
@@ -64,15 +64,16 @@ const BookingForm: React.FC = () => {
 
     try {
       const payload = {
-        user_id: name.trim(),
+        customerName: name.trim(),
         phone: `${selectedCountry.code}${phone.replace(/\s/g, "")}`,
         adults: parseInt(adults, 10) || 1,
         children: parseInt(children, 10) || 0,
-        date: startDate ? startDate.toISOString().split("T")[0] : "",
-        time: time,
-        occasion: "Dining",
-        instruction: note.trim() || "None",
-        status: "pending",
+        bookingDate: startDate
+          ? startDate.toISOString()
+          : new Date().toISOString(),
+        time: time, // ✅ now valid
+        occasion: occasion || "Dining",
+        notes: note.trim() || "",
       };
 
       const response = await fetch("http://localhost:8000/api/reservations", {
