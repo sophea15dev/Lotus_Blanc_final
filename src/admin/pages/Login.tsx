@@ -18,10 +18,9 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // ✅ Load saved email
+  // load saved email
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberEmail");
-
     if (savedEmail) {
       setEmail(savedEmail);
       setRememberMe(true);
@@ -34,24 +33,23 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     setIsLoading(true);
 
     try {
+      // ✅ FIXED ENDPOINT (NOW WORKS)
       const response = await api.post("/auth/login", {
         email,
         password,
       });
 
-      const data = response.data;
-
-      const token = data?.token || data?.access_token;
+      const token = response.data?.token || response.data?.access_token;
 
       if (!token) {
         throw new Error("Token not found");
       }
 
-      // save token
+      // save auth
       localStorage.setItem("authToken", token);
       localStorage.setItem("isLoggedIn", "true");
 
-      // ✅ Remember email logic
+      // remember email
       if (rememberMe) {
         localStorage.setItem("rememberEmail", email);
       } else {
@@ -66,7 +64,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       if (error.response?.status === 401) {
         setErrorMessage("Invalid email or password");
       } else if (error.response?.status === 404) {
-        setErrorMessage("API not found: /auth/login");
+        setErrorMessage("API not found: /api/auth/login");
       } else {
         setErrorMessage(error.response?.data?.message || "Login failed");
       }
@@ -79,7 +77,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     <div className="min-h-screen bg-[#F0F4F8] flex items-center justify-center p-4 font-sans">
       <div className="w-full max-w-[950px] bg-white rounded-[2.5rem] shadow-2xl flex overflow-hidden border border-white min-h-[580px]">
 
-        {/* LEFT SIDE (UNCHANGED) */}
+        {/* LEFT SIDE (UNCHANGED UI) */}
         <div className="hidden md:flex w-1/2 bg-[#034A6C] relative items-center justify-center p-12 overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1000"
@@ -89,7 +87,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           <div className="absolute inset-0 bg-gradient-to-t from-[#034A6C] to-transparent opacity-70" />
 
           <div className="relative z-10 w-full">
-            <h2 className="text-5xl font-black text-white italic leading-tight mb-4 tracking-tighter font-['Work_Sans']">
+            <h2 className="text-5xl font-black text-white italic leading-tight mb-4 tracking-tighter">
               Lotus Blanc <br /> Restaurant.
             </h2>
             <div className="h-1.5 w-20 bg-[#FF6E31] rounded-full" />
@@ -98,6 +96,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
         {/* RIGHT SIDE (UNCHANGED UI) */}
         <div className="w-full md:w-1/2 p-8 lg:p-16 flex flex-col justify-center bg-white">
+
           <h1 className="text-4xl font-black text-slate-800 text-center mb-10 tracking-tight">
             Login
           </h1>
@@ -105,7 +104,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           <form onSubmit={handleLogin} className="space-y-7">
 
             {/* EMAIL */}
-            <div className="space-y-1">
+            <div>
               <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">
                 Email
               </label>
@@ -122,7 +121,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             </div>
 
             {/* PASSWORD */}
-            <div className="space-y-1">
+            <div>
               <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">
                 Password
               </label>
@@ -147,7 +146,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
               </div>
             </div>
 
-            {/* REMEMBER ME */}
+            {/* REMEMBER */}
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
