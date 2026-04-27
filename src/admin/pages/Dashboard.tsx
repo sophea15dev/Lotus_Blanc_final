@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from "react";
+      import React, { useState, useMemo, useEffect } from "react";
 import axios from "axios";
-import { Search, Bell, X, ChevronRight, Users } from "lucide-react";
+import { Search, Bell, X, ChevronRight } from "lucide-react";
 
 const Dashboard: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -9,10 +9,16 @@ const Dashboard: React.FC = () => {
   const [selectedGuest, setSelectedGuest] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  useEffect(() => {
+    document.body.style.overflow = isDrawerOpen ? "hidden" : "auto";
+  }, [isDrawerOpen]);
+
+  // FETCH
   const fetchReservations = async () => {
     try {
       setLoading(true);
       const res = await axios.get("http://localhost:8000/api/reservations");
+
       const data = Array.isArray(res.data) ? res.data : [];
 
       const formatted = data.map((item: any) => ({
@@ -27,6 +33,7 @@ const Dashboard: React.FC = () => {
         }),
         occasion: item.occasion,
         instruction: item.notes,
+        status: item.status || "PENDING", // ✅ ADD STATUS
       }));
 
       setReservations(formatted);
@@ -41,24 +48,30 @@ const Dashboard: React.FC = () => {
     fetchReservations();
   }, []);
 
-  // ✅ DELETE API (ADDED ONLY)
+  // DELETE
   const deleteReservation = async (id: number) => {
     try {
-      await axios.delete(
-        `http://localhost:8000/api/reservations/${id}`
-      );
-
-      console.log("Deleted reservation:", id);
-
-      // refresh list after delete
+      await axios.delete(`http://localhost:8000/api/reservations/${id}`);
       fetchReservations();
-
-      // close drawer
       setIsDrawerOpen(false);
       setSelectedGuest(null);
-
     } catch (error) {
-      console.error("Delete failed:", error);
+      console.error(error);
+    }
+  };
+
+  // STATUS UPDATE
+  const updateStatus = async (id: number, status: string) => {
+    try {
+      await axios.put(`http://localhost:8000/api/reservations/${id}`, {
+        status,
+      });
+
+      fetchReservations();
+      setIsDrawerOpen(false);
+      setSelectedGuest(null);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -68,12 +81,25 @@ const Dashboard: React.FC = () => {
     );
   }, [searchTerm, reservations]);
 
+  // ✅ STATUS BADGE STYLE
+  const statusBadge = (status: string) => {
+    const base = "text-[10px] px-2 py-1 rounded-full font-semibold";
+
+    if (status === "CONFIRMED")
+      return `${base} bg-green-100 text-green-700`;
+
+    if (status === "CANCELLED")
+      return `${base} bg-red-100 text-red-600`;
+
+    return `${base} bg-gray-100 text-gray-600`;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f6f7fb] to-[#eef2f7] text-slate-900">
 
       {/* HEADER */}
       <header className="h-16 bg-white/70 backdrop-blur-xl border-b flex items-center justify-between px-6 sticky top-0 z-30">
-        <h1 className="font-black text-lg text-[#034A6C] tracking-tight">
+        <h1 className="font-black text-lg text-[#034A6C]">
           Lotus Blanc
         </h1>
 
@@ -81,40 +107,32 @@ const Dashboard: React.FC = () => {
           <div className="relative hidden sm:block">
             <Search size={14} className="absolute left-3 top-2.5 text-slate-400" />
             <input
-              className="pl-9 pr-3 py-2 bg-slate-100 rounded-xl text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#034A6C]/10 transition"
+              className="pl-9 pr-3 py-2 bg-slate-100 rounded-xl text-sm outline-none"
               placeholder="Search reservations..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <Bell size={18} className="text-slate-500 cursor-pointer hover:text-slate-700 transition" />
+          <Bell size={18} className="text-slate-500" />
         </div>
       </header>
 
       {/* MAIN */}
       <main className="p-6 md:p-10 max-w-5xl mx-auto">
 
-        <div className="mb-8">
-          <h2 className="text-3xl font-black tracking-tight">
-            Reservations
-          </h2>
-          <p className="text-sm text-slate-500 mt-1">
-            Manage and track all bookings in real time
-          </p>
-        </div>
+        <h2 className="text-3xl font-black mb-8">Reservations</h2>
 
-        {/* LIST */}
         <div className="space-y-3">
 
           {loading ? (
             Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-20 bg-white rounded-2xl animate-pulse border" />
+              <div key={i} className="h-20 bg-white rounded-2xl animate-pulse" />
             ))
           ) : filtered.length === 0 ? (
-            <div className="text-center py-20 text-slate-400">
+            <p className="text-center text-slate-400 py-10">
               No reservations found
-            </div>
+            </p>
           ) : (
             filtered.map((r) => (
               <div
@@ -123,35 +141,30 @@ const Dashboard: React.FC = () => {
                   setSelectedGuest(r);
                   setIsDrawerOpen(true);
                 }}
-                className="group bg-white/80 backdrop-blur border border-slate-100 rounded-2xl p-5 flex items-center justify-between cursor-pointer transition-all hover:shadow-xl hover:-translate-y-0.5"
+                className="bg-white rounded-2xl p-5 flex justify-between items-center cursor-pointer hover:shadow-md transition"
               >
                 <div className="flex items-center gap-4">
-
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#034A6C] to-[#0672A4] text-white flex items-center justify-center font-bold shadow">
+                  <div className="w-12 h-12 bg-[#034A6C] text-white flex items-center justify-center rounded-full font-bold">
                     {r.user_id?.charAt(0)}
                   </div>
 
                   <div>
-                    <p className="font-semibold text-slate-800 group-hover:text-[#034A6C] transition">
-                      {r.user_id}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold">{r.user_id}</p>
 
-                    <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
-                      <span>{r.time}</span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <Users size={12} />
-                        {r.adults + r.children}
-                      </span>
-                      <span>•</span>
-                      <span className="px-2 py-0.5 bg-slate-100 rounded-full">
-                        {r.occasion}
+                      {/* ✅ STATUS BADGE */}
+                      <span className={statusBadge(r.status)}>
+                        {r.status}
                       </span>
                     </div>
+
+                    <p className="text-xs text-slate-500">
+                      {r.time} • {r.occasion}
+                    </p>
                   </div>
                 </div>
 
-                <ChevronRight size={18} className="text-slate-300 group-hover:text-slate-500 transition" />
+                <ChevronRight size={18} />
               </div>
             ))
           )}
@@ -159,76 +172,127 @@ const Dashboard: React.FC = () => {
         </div>
       </main>
 
+      {/* OVERLAY */}
+      {isDrawerOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40"
+          onClick={() => setIsDrawerOpen(false)}
+        />
+      )}
+
       {/* DRAWER */}
       {isDrawerOpen && selectedGuest && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-            onClick={() => setIsDrawerOpen(false)}
-          />
+  <div className="fixed right-0 top-0 h-full w-[400px] bg-white z-50 shadow-2xl flex flex-col">
 
-          <div className="fixed right-0 top-0 h-full w-full sm:w-[380px] bg-white shadow-2xl rounded-l-3xl p-6 z-50">
+    {/* HEADER (glass style) */}
+    <div className="px-6 py-5 border-b bg-gradient-to-r from-[#034A6C]/5 to-transparent backdrop-blur-md flex items-center justify-between">
+      <div>
+        <h3 className="font-bold text-lg text-slate-800">
+          Reservation
+        </h3>
+        <p className="text-xs text-slate-500">
+          Booking details overview
+        </p>
+      </div>
 
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-xl tracking-tight">
-                Reservation Details
-              </h3>
-              <button onClick={() => setIsDrawerOpen(false)}>
-                <X size={18} />
-              </button>
-            </div>
+      <button
+        onClick={() => setIsDrawerOpen(false)}
+        className="p-2 rounded-full hover:bg-slate-100 transition"
+      >
+        <X size={18} />
+      </button>
+    </div>
 
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#034A6C] to-[#0672A4] text-white flex items-center justify-center font-bold">
-                {selectedGuest.user_id?.charAt(0)}
-              </div>
+    {/* BODY */}
+    <div className="p-6 space-y-5 flex-1 overflow-y-auto">
 
-              <div>
-                <p className="font-semibold text-lg">{selectedGuest.user_id}</p>
-                <p className="text-sm text-slate-500">{selectedGuest.time}</p>
-              </div>
-            </div>
-
-            {/* INFO */}
-            <div className="space-y-4">
-              {[
-                ["Phone", selectedGuest.phone],
-                ["Occasion", selectedGuest.occasion],
-                ["Notes", selectedGuest.instruction || "—"],
-              ].map(([label, value]) => (
-                <div key={label as string}>
-                  <p className="text-xs text-slate-400 mb-1">{label}</p>
-                  <div className="bg-slate-50 px-4 py-3 rounded-xl font-medium text-slate-800">
-                    {value}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* ACTIONS */}
-            <div className="mt-8 space-y-3">
-
-              <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-xl font-semibold transition">
-                Confirm Reservation
-              </button>
-
-              <button className="w-full bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-xl font-semibold transition">
-                Cancel Reservation
-              </button>
-
-              {/* DELETE BUTTON */}
-              <button
-                onClick={() => deleteReservation(selectedGuest.reservation_id)}
-                className="w-full border border-red-500 text-red-500 hover:bg-red-50 py-2.5 rounded-xl font-semibold transition"
-              >
-                Delete Reservation
-              </button>
-
-            </div>
-
+      {/* PROFILE CARD */}
+      <div className="bg-gradient-to-br from-slate-50 to-white border rounded-2xl p-5 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-lg font-bold text-slate-800">
+              {selectedGuest.user_id}
+            </p>
+            <p className="text-xs text-slate-500">
+              Guest Customer
+            </p>
           </div>
-        </>
-      )}
+
+          {/* STATUS */}
+          <span
+            className={`text-xs font-semibold px-3 py-1 rounded-full
+              ${
+                selectedGuest.status === "CONFIRMED"
+                  ? "bg-green-100 text-green-700"
+                  : selectedGuest.status === "CANCELLED"
+                  ? "bg-red-100 text-red-600"
+                  : "bg-gray-100 text-gray-600"
+              }`}
+          >
+            {selectedGuest.status || "PENDING"}
+          </span>
+        </div>
+
+        <div className="mt-4 text-sm text-slate-600">
+          📞 {selectedGuest.phone}
+        </div>
+      </div>
+
+      {/* INFO GRID */}
+      <div className="grid gap-3">
+
+        <div className="flex items-center justify-between bg-white border rounded-xl p-4">
+          <span className="text-slate-500 text-sm">Occasion</span>
+          <span className="font-medium text-slate-800">
+            {selectedGuest.occasion}
+          </span>
+        </div>
+
+        <div className="bg-white border rounded-xl p-4">
+          <p className="text-slate-500 text-sm mb-1">Notes</p>
+          <p className="text-slate-700 text-sm">
+            {selectedGuest.instruction || "No special instructions"}
+          </p>
+        </div>
+
+      </div>
+
+      {/* ACTION PANEL */}
+      <div className="space-y-3 pt-2">
+
+        <button
+          onClick={() =>
+            updateStatus(selectedGuest.reservation_id, "CONFIRMED")
+          }
+          className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:opacity-90 text-white py-2.5 rounded-xl font-semibold shadow-sm transition"
+        >
+          ✓ Confirm Reservation
+        </button>
+
+        <button
+          onClick={() =>
+            updateStatus(selectedGuest.reservation_id, "CANCELLED")
+          }
+          className="w-full bg-gradient-to-r from-red-500 to-red-400 hover:opacity-90 text-white py-2.5 rounded-xl font-semibold shadow-sm transition"
+        >
+          ✕ Cancel Reservation
+        </button>
+
+        <button
+          onClick={() =>
+            deleteReservation(selectedGuest.reservation_id)
+          }
+          className="w-full border border-red-500 text-red-500 hover:bg-red-50 py-2.5 rounded-xl font-semibold transition"
+        >
+          🗑 Delete Reservation
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
