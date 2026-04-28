@@ -12,9 +12,11 @@ type Dish = {
   name: string;
   price: number;
   description?: string;
-  image?: string;
+  imageUrl?: string;
   categoryId: number;
 };
+
+const API_BASE = "http://localhost:8000";
 
 const MenuManagement: React.FC = () => {
   const [items, setItems] = useState<Dish[]>([]);
@@ -33,6 +35,7 @@ const MenuManagement: React.FC = () => {
     price: "",
     categoryId: "",
     description: "",
+    imageUrl: "",
   });
 
   // ================= FETCH =================
@@ -41,21 +44,29 @@ const MenuManagement: React.FC = () => {
       setLoading(true);
 
       const [dishesRes, catsRes] = await Promise.all([
-        axios.get("http://localhost:8000/api/dishes"),
-        axios.get("http://localhost:8000/api/categories"),
+        axios.get(`${API_BASE}/api/dishes`),
+        axios.get(`${API_BASE}/api/categories`),
       ]);
 
-      setItems(dishesRes.data);
-      setCategories(catsRes.data);
+      const dishes = Array.isArray(dishesRes.data)
+        ? dishesRes.data
+        : dishesRes.data.data || [];
 
-      if (catsRes.data.length > 0) {
+      const cats = Array.isArray(catsRes.data)
+        ? catsRes.data
+        : catsRes.data.data || [];
+
+      setItems(dishes);
+      setCategories(cats);
+
+      if (cats.length > 0) {
         setFormData((prev) => ({
           ...prev,
-          categoryId: prev.categoryId || String(catsRes.data[0].id),
+          categoryId: prev.categoryId || String(cats[0].id),
         }));
       }
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.error(err.response?.data || err.message);
       setError("Failed to load data");
     } finally {
       setLoading(false);
@@ -66,70 +77,68 @@ const MenuManagement: React.FC = () => {
     fetchData();
   }, []);
 
-  // ================= SUBMIT (FIXED) =================
+  // ================= OPEN MODAL =================
+  const openModal = (item?: Dish) => {
+    if (item) {
+      setEditingItem(item);
+      setFormData({
+        name: item.name,
+        price: String(item.price),
+        categoryId: String(item.categoryId),
+        description: item.description || "",
+        imageUrl: item.imageUrl || "",
+      });
+    } else {
+      setEditingItem(null);
+      setFormData({
+        name: "",
+        price: "",
+        categoryId: categories[0] ? String(categories[0].id) : "",
+        description: "",
+        imageUrl: "",
+      });
+    }
+
+    setSelectedFile(null);
+    setIsModalOpen(true);
+  };
+
+  // ================= SUBMIT =================
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    console.log("DEBUG FORM:", formData);
 
     if (!formData.name.trim()) {
       setError("Name is required");
       return;
     }
 
-    const price = Number(formData.price);
-    if (isNaN(price)) {
-      setError("Price must be a number");
+    if (!formData.description.trim()) {
+      setError("Description is required");
       return;
     }
 
-    if (!formData.categoryId) {
-      setError("Category is required");
-      return;
-    }
-
-    const data = new FormData();
-
-    // MUST MATCH BACKEND FIELD NAMES
-    data.append("name", formData.name.trim());
-    data.append("price", String(price));
-    data.append("categoryId", String(formData.categoryId));
-    data.append("description", formData.description || "");
-
-    // IMAGE FIELD (IMPORTANT)
-    if (selectedFile) {
-      data.append("image", selectedFile);
-    }
+    const payload = {
+      name: formData.name.trim(),
+      description: formData.description.trim(),
+      price: Number(formData.price),
+      categoryId: Number(formData.categoryId),
+      imageUrl: formData.imageUrl,
+    };
 
     try {
-      const url = editingItem
-        ? `http://localhost:8000/api/dishes/${editingItem.id}`
-        : `http://localhost:8000/api/dishes`;
-
-      await axios({
-        method: editingItem ? "put" : "post",
-        url,
-        data,
-        headers: {
-          // DO NOT set Content-Type manually (IMPORTANT FIX)
-        },
-      });
+      if (editingItem) {
+        await axios.put(`${API_BASE}/api/dishes/${editingItem.id}`, payload);
+      } else {
+        await axios.post(`${API_BASE}/api/dishes`, payload);
+      }
 
       await fetchData();
 
       setIsModalOpen(false);
       setEditingItem(null);
-      setSelectedFile(null);
-
-      setFormData({
-        name: "",
-        price: "",
-        categoryId: "",
-        description: "",
-      });
     } catch (err: any) {
-      console.log("SUBMIT ERROR:", err.response?.data);
+      console.error("SUBMIT ERROR:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Failed to save dish");
     }
   };
@@ -137,25 +146,21 @@ const MenuManagement: React.FC = () => {
   // ================= DELETE =================
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:8000/api/dishes/${id}`);
-      setItems((prev) => prev.filter((i) => i.id !== id));
+      await axios.delete(`${API_BASE}/api/dishes/${id}`);
+      await fetchData();
     } catch (err: any) {
-      console.log("DELETE ERROR:", err.response?.data);
+      console.error(err.response?.data || err.message);
       setError(err.response?.data?.message || "Delete failed");
     }
   };
 
-  // ================= UI (UNCHANGED) =================
   return (
     <div className="p-8 max-w-5xl mx-auto">
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Menu Management</h1>
 
         <button
-          onClick={() => {
-            setEditingItem(null);
-            setIsModalOpen(true);
-          }}
+          onClick={() => openModal()}
           className="bg-blue-600 text-white px-4 py-2 rounded"
         >
           + Add Dish
@@ -183,12 +188,7 @@ const MenuManagement: React.FC = () => {
               </div>
 
               <div className="flex gap-2">
-                <button
-                  onClick={() => {
-                    setEditingItem(item);
-                    setIsModalOpen(true);
-                  }}
-                >
+                <button onClick={() => openModal(item)}>
                   <Edit3 />
                 </button>
 
@@ -201,7 +201,6 @@ const MenuManagement: React.FC = () => {
         </div>
       )}
 
-      {/* ================= MODAL ================= */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
           <form
@@ -234,7 +233,6 @@ const MenuManagement: React.FC = () => {
               }
               className="w-full border p-2"
             >
-              <option value="">Select category</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
@@ -246,21 +244,27 @@ const MenuManagement: React.FC = () => {
               placeholder="Description"
               value={formData.description}
               onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
+                setFormData({
+                  ...formData,
+                  description: e.target.value,
+                })
               }
               className="w-full border p-2"
             />
 
             <input
-              type="file"
+              placeholder="Image URL"
+              value={formData.imageUrl}
               onChange={(e) =>
-                setSelectedFile(e.target.files?.[0] || null)
+                setFormData({
+                  ...formData,
+                  imageUrl: e.target.value,
+                })
               }
+              className="w-full border p-2"
             />
 
-            <button className="bg-blue-600 text-white w-full p-2">
-              Save
-            </button>
+            <button className="bg-blue-600 text-white w-full p-2">Save</button>
           </form>
         </div>
       )}
