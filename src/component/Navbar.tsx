@@ -72,7 +72,6 @@ const Navbar: React.FC = () => {
               <span>Reservation</span>
             </Link>
 
-            {/* Mobile Toggle */}
             <button 
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 text-[#004e70] hover:bg-orange-50 rounded-lg transition-colors"
@@ -84,7 +83,7 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* MOBILE MENU: Dropdown */}
+      {/* MOBILE MENU */}
       <div className={`
         absolute top-full left-0 w-full bg-white shadow-2xl transition-all duration-300 ease-in-out md:hidden z-[300]
         ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}
